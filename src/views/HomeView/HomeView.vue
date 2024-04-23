@@ -7,6 +7,8 @@ import Article from "../../models/classes/Article.ts";
 import UserInterface from "../../models/interfaces/UserInterface.ts";
 import User from "../../models/classes/User.ts";
 import {useUserInfoStore} from "../../stores/counter.ts";
+import UserInfoPreview from "../../components/userInfoPreview.vue";
+
 
 
 const router = useRouter()
@@ -53,23 +55,9 @@ onMounted(async () => {
       if (localStorage.getItem('token')) {
           userModel.value = await user.getUser();
           userStorage.setUser(userModel.value)
-          console.log(userModel)
       }
     }
 });
-
-// onMounted(()=>{
-//   getUser()
-//   getAllArticle()
-// })
-// const getAvatar = async () =>{
-//   await userGetAvatar(user.avatarURL)
-//       .then()
-// }
-// watch(route,(newVal,oldVal) => {
-//   console.log(newVal)
-// },{immediate:true,deep:false})
-
 
 </script>
 
@@ -78,8 +66,11 @@ onMounted(async () => {
     <el-container >
       <el-aside class="left-container" width="200px">
 
-        <el-avatar class="left-avatar" :src="userStorage.user?userStorage.user.userAvatarURL:null"/>
-
+<!--        <el-avatar class="left-avatar" :src="userStorage.user?userStorage.user.userAvatarURL:null"/>-->
+        <user-info-preview
+            class="left-avatar"
+            v-model="userStorage.user"
+        />
         <el-menu class="left-menu"
                  default-active="2"
                  text-color="#fff"
@@ -138,9 +129,9 @@ onMounted(async () => {
       height: 100%;
       opacity: 0.8;
       .left-avatar{
-        margin-left: 50px;
-        width: 100px;
-        height: 100px;
+        ////margin-left: 50px;
+        //width: 100px;
+        height: 110px;
       }
       .left-menu{
         margin-top: 10px;
@@ -172,6 +163,7 @@ onMounted(async () => {
 
       }
       .main-box {
+        padding: 10px;
         margin-top: 10px;
         background: antiquewhite;
         border-radius: 10px;

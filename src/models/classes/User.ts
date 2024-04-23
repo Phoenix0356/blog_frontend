@@ -1,5 +1,6 @@
-import {userGet, userLogin, userLogout, userRegister} from "../../api/user.ts";
+import {userGet, userLogin, userLogout, userRegister, userUpdate} from "../../api/user.ts";
 import UserInterface from "../interfaces/UserInterface.ts";
+import userInterface from "../interfaces/UserInterface.ts";
 
 class User{
     private static instance: User;
@@ -65,6 +66,20 @@ class User{
             if (resp.data.result == 1){
                 strategy()
                 return resp.data.object.token
+            }else {
+                alert(resp.data.msg)
+            }
+        })
+    }
+
+    public updateUser(username:string):Promise<userInterface>{
+        return userUpdate({
+            username:username
+        })
+        .then(resp => {
+            if (resp.data.result == 1){
+                console.log(resp.data.object)
+                return resp.data.object
             }else {
                 alert(resp.data.msg)
             }

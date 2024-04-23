@@ -5,7 +5,7 @@ import UserInterface from "../models/interfaces/UserInterface.ts";
 import User from "../models/classes/User.ts";
 
 const router = useRouter()
-
+const user = User.getInstance()
 
 const userRef = ref()
 const userModel = ref<UserInterface>({
@@ -14,7 +14,7 @@ const userModel = ref<UserInterface>({
   password: "",
   username: ""
 })
-const user = User.getInstance()
+
 const rules = {
   username:[{
     required:true,

@@ -5,6 +5,7 @@ import ArticleInterface from "../../../models/interfaces/ArticleInterface.ts";
 import CountIndicator from "../../../components/CountIndicator.vue";
 import Article from "../../../models/classes/Article.ts";
 import {useUserInfoStore} from "../../../stores/counter.ts";
+import UserInfoPreview from "../../../components/userInfoPreview.vue";
 
 const router = useRouter()
 const article = Article.getInstance()
@@ -19,6 +20,11 @@ const articleModel = ref<ArticleInterface>({
   articleTitle: "",
   articleUpvoteCount: 0,
   userAvatarURL: "",
+  username: ""
+})
+
+const userModel = ref({
+  userAvatarURL: "http://localhost:8093/avatar/default.jpg",
   username: ""
 })
 
@@ -41,6 +47,8 @@ const updateArticle = () => {
 onMounted(async ()=> {
   articleId = router.currentRoute.value.params.articleId
   articleModel.value = await article.getArticle(articleId, () => router.push("/"))
+  userModel.value.userAvatarURL = articleModel.value.userAvatarURL
+  userModel.value.username = articleModel.value.username
 })
 
 onBeforeRouteLeave((to)=>{
@@ -78,7 +86,9 @@ onBeforeRouteLeave((to)=>{
           </template>
         </CountIndicator>
 
-        <el-avatar class="avatar" :src="articleModel.userAvatarURL"/>
+        <el-avatar
+            class="avatar"
+            :src="articleModel.userAvatarURL"/>
       </el-header>
 
       <el-divider class="divider" />
@@ -105,7 +115,7 @@ onBeforeRouteLeave((to)=>{
   background: antiquewhite;
   .article-container{
     .article-header{
-      height: 50px;
+      height: 40px;
       .title{
         margin-top: 12px;
         font-size: 20px;
@@ -134,7 +144,7 @@ onBeforeRouteLeave((to)=>{
         position: absolute;
       }
       .avatar{
-        margin-top: 5px;
+
         margin-left: 890px;
         position: absolute;
       }
@@ -145,7 +155,7 @@ onBeforeRouteLeave((to)=>{
     }
     .article-main{
       padding: 0 20px;
-      height: 445px;
+      height: 455px;
     }
     .update_button{
       margin-top: 10px;

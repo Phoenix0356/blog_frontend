@@ -2,39 +2,112 @@
 import {onMounted, ref} from "vue";
 import router from "../../../router";
 import {useUserInfoStore} from "../../../stores/counter.ts";
+import {getUserRole} from "../../../utils/DataUtil.ts";
+import User from "../../../models/classes/User.ts";
+import userInterface from "../../../models/interfaces/UserInterface.ts";
+import UserInterface from "../../../models/interfaces/UserInterface.ts";
 
+const userRef = ref()
+const rules = {
+  username:[{
+    required:true,
+    message:"用户名不能为空"
+  },{
+    max:20,
+    message:"用户名过长"
+  }]
+}
 
+const dialogVisible = ref(false)
 const userStorage = useUserInfoStore()
+const user = User.getInstance()
+let userModel = null
+const tempUserModel = ref<UserInterface>({
+  password: "",
+  roleLevel: 0,
+  userAvatarURL: "",
+  username:""
+})
+const updateUserInfo = async () => {
+  try {
 
-const userAvatarURL = ref('')
-const username = ref('')
+
+    await userRef.value.validate();
+    dialogVisible.value = false
+    userModel = await user.updateUser(tempUserModel.value.username)
+    if (userModel) {
+      userStorage.setUser(userModel)
+    }
+  }catch (errors){
+      alert("用户名非法")
+  }
+}
 
 onMounted(() => {
   if (userStorage.user){
-    userAvatarURL.value = userStorage.user.userAvatarURL
-    username.value = userStorage.user.username
+    tempUserModel.value = JSON.parse(JSON.stringify(userStorage.user))
+    console.log(tempUserModel.value)
   }else {
     alert("Please login")
     router.push('/')
   }
 })
+
+const handleClose = () => {
+    dialogVisible.value = false;
+    tempUserModel.value.username = userStorage.user.username
+}
+
 </script>
 
 <template>
-<el-container direction="vertical">
-  <el-avatar size="large" class="avatar" :src="userAvatarURL"/>
-  <el-text  size="large" class="username">用户名：{{username}}</el-text>
+<el-container class="root" direction="vertical">
+  <el-avatar class="avatar" size="large" :src="tempUserModel.userAvatarURL"/>
+  <el-text  class="username" size="large">用户名：{{ tempUserModel.username }}</el-text>
+  <el-text  class="userRole" size="large">身份：{{ getUserRole(tempUserModel.roleLevel) }}</el-text>
+  <el-button class="update_button" size="large" type="primary" plain @click="dialogVisible = true">修改</el-button>
+
+  <el-dialog
+      class="dialog"
+      v-model="dialogVisible"
+      title="用户信息"
+      :show-close="true"
+      :before-close="handleClose"
+  >
+    <el-form :model="tempUserModel"
+             :rules="rules"
+             ref="userRef"
+    >
+      <el-form-item label="用户名" prop="username">
+        <el-input v-model="tempUserModel.username" :maxlength="20"/>
+      </el-form-item>
+      <el-button type="primary" @click="handleClose">取消</el-button>
+      <el-button type="primary" @click="updateUserInfo" >
+        确认
+      </el-button>
+    </el-form>
+  </el-dialog>
+
+
 </el-container>
 </template>
 
 <style scoped lang="scss">
-.layout{
-  .avatar{
+.root{
+  display: flex;
+  flex-direction: column;
+  align-items: center;
 
-  }
   .username{
     margin-top: 20px;
-      font-size: 20px;
+    font-size: 20px;
+  }
+  .userRole{
+    margin-top: 20px;
+    font-size: 20px;
+  }
+  .update_button{
+    margin-top: 38%;
   }
 }
 </style>

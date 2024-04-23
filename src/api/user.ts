@@ -26,3 +26,10 @@ export const userGet = () =>
         'method':'get',
     })
 
+export const userUpdate = (data:any) =>
+    request({
+        'url':'/user/update',
+        'method':'put',
+        'data':data
+    })
+

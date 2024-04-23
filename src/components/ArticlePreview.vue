@@ -1,13 +1,22 @@
 <script setup lang="ts">
 
 import {useRouter} from 'vue-router';
+import UserInfoPreview from "./userInfoPreview.vue";
+import {ref} from "vue";
+
 
 
 const props = defineProps(['article'])
 const router = useRouter()
+const userModel = ref({
+  userAvatarURL: props.article.userAvatarURL,
+  username: props.article.username
+})
+
 const goToArticleDetail = () => {
   router.push( `/article/${props.article.articleId}`)
 }
+
 </script>
 
 <template>
@@ -18,7 +27,10 @@ const goToArticleDetail = () => {
            @click="goToArticleDetail"
   >
     <el-text size="large" class="title" v-text="props.article.articleTitle"></el-text>
-    <el-avatar  style=" margin-bottom: 20px;" v-if="props.article" :src="props.article.userAvatarURL" class="avatar"/>
+    <user-info-preview
+        v-model="userModel"
+        style=" margin-bottom: 0px;"
+        class="userinfo"/>
   </el-card>
 </template>
 
@@ -32,14 +44,12 @@ const goToArticleDetail = () => {
     bottom: 30px;
     position: absolute;
 
-
   }
-  .avatar{
+  .userinfo{
     position: absolute;
     left: 900px;
-
-
-
+    height: 70%;
+    width: 50px;
   }
 }
 </style>
