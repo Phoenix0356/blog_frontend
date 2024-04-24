@@ -10,7 +10,7 @@ export const commentGet = (commentId:string) =>
 
 export const commentArticleList = (data:string) =>
     request({
-        'url':`/comment/all?articleId=${data}`,
+        'url':`/comment/get/all?articleId=${data}`,
         'method':'get',
     })
 

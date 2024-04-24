@@ -126,7 +126,6 @@ onBeforeRouteLeave((to)=>{
                    type="primary"
                    @click="clickUpdate">修改</el-button>
         <el-button class="update_button"
-                   v-if="userStorage.user&&userStorage.user.roleLevel>=1"
                    type="primary"
                    @click="clickComment">评论</el-button>
       </div>
@@ -152,8 +151,14 @@ onBeforeRouteLeave((to)=>{
       />
     </template>
   </el-scrollbar>
-    <el-input placeholder="发一条评论吧" v-model="commentsModel.commentContent"></el-input>
-    <el-button @click="clickPostComment">发布</el-button>
+    <div v-if="!userStorage.user||userStorage.user.roleLevel<1" >
+      <el-input  placeholder="登录后评论"></el-input>
+    </div>
+    <div v-else>
+      <el-input  placeholder="发一条评论吧" v-model="commentsModel.commentContent"></el-input>
+      <el-button @click="clickPostComment">发布</el-button>
+    </div>
+
   </el-dialog>
 </template>
 
