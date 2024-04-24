@@ -1,4 +1,4 @@
-import {userGet, userLogin, userLogout, userRegister, userUpdate} from "../../api/user.ts";
+import {userGet, userLogin, userLogout, userRegister, userUpdate} from "../../api/UserApi.ts";
 import UserInterface from "../interfaces/UserInterface.ts";
 import userInterface from "../interfaces/UserInterface.ts";
 
@@ -13,7 +13,7 @@ class User{
         return this.instance;
     }
 
-    public getUser ():Promise<UserInterface> {
+    public async getUser ():Promise<UserInterface> {
         return userGet()
         .then((resp)=>{
             if (resp.data.result == 1) {
@@ -24,8 +24,8 @@ class User{
         })
     }
 
-    public logout(strategy:Strategy) {
-        userLogout()
+    public async logout(strategy:Strategy) {
+        await userLogout()
         .then(resp =>{
             if (resp.data.result == 1) {
                 localStorage.clear();
@@ -39,7 +39,7 @@ class User{
         })
     }
 
-    public login(username:string,password:string,strategy:Strategy):Promise<string>{
+    public async login(username:string,password:string,strategy:Strategy):Promise<string>{
         return userLogin({
             username: username,
             password: password
@@ -55,7 +55,7 @@ class User{
             console.log(error.response)
         })
     }
-    public register(username:string,password:string,
+    public async register(username:string,password:string,
                     avatarBase64:string,strategy:Strategy):Promise<string> {
         return userRegister({
             username: username,
@@ -72,7 +72,7 @@ class User{
         })
     }
 
-    public updateUser(username:string):Promise<userInterface>{
+    public async updateUser(username:string):Promise<userInterface>{
         return userUpdate({
             username:username
         })

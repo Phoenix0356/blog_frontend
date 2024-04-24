@@ -5,10 +5,13 @@ import ArticleInterface from "../../../models/interfaces/ArticleInterface.ts";
 import CountIndicator from "../../../components/CountIndicator.vue";
 import Article from "../../../models/classes/Article.ts";
 import {useUserInfoStore} from "../../../stores/counter.ts";
-import UserInfoPreview from "../../../components/userInfoPreview.vue";
+import Comments from "../../../models/classes/Comments.ts";
+import CommentInterface from "../../../models/interfaces/CommentInterface.ts";
+import CommentEntry from "../../../components/CommentEntry.vue";
 
 const router = useRouter()
 const article = Article.getInstance()
+const comments = Comments.getInstance()
 const userStorage = useUserInfoStore()
 
 const articleModel = ref<ArticleInterface>({
@@ -23,14 +26,25 @@ const articleModel = ref<ArticleInterface>({
   username: ""
 })
 
-const userModel = ref({
-  userAvatarURL: "http://localhost:8093/avatar/default.jpg",
-  username: ""
+const commentsModel = ref<CommentInterface>({
+  commentId: "",
+  commentReviseTime: "",
+  commentUpvoteCount: 0,
+  userAvatarURL: "",
+  username: "",
+  commentContent:""
 })
 
+const allCommentsList = ref<CommentInterface[]>([])
+
+const dialogVisible = ref(false)
 let articleId:any = null
 
-const goToUpdate = () => {
+const clickComment = async () =>{
+  dialogVisible.value = true
+  allCommentsList.value = await comments.getArticleCommentList(articleId)
+}
+const clickUpdate = () => {
   router.push({
     path: '/article/post',
     query: {
@@ -39,16 +53,24 @@ const goToUpdate = () => {
   })
 }
 
+const clickPostComment = async () => {
+  await comments.saveComment(commentsModel.value.commentContent, articleId)
+  allCommentsList.value = await comments.getArticleCommentList(articleId)
+
+}
 const updateArticle = () => {
  article.updateArticleStatic(articleId,articleModel.value.articleReadCount+1,
      articleModel.value.articleUpvoteCount,articleModel.value.articleBookmarkCount)
 }
 
+const handleClose = () => {
+  commentsModel.value.commentContent = ""
+  dialogVisible.value = false
+}
+
 onMounted(async ()=> {
   articleId = router.currentRoute.value.params.articleId
   articleModel.value = await article.getArticle(articleId, () => router.push("/"))
-  userModel.value.userAvatarURL = articleModel.value.userAvatarURL
-  userModel.value.username = articleModel.value.username
 })
 
 onBeforeRouteLeave((to)=>{
@@ -102,12 +124,37 @@ onBeforeRouteLeave((to)=>{
                    v-if="userStorage.user&&userStorage.user.roleLevel>=2&&
                     userStorage.user.username === articleModel.username"
                    type="primary"
-                   @click="goToUpdate">修改</el-button>
+                   @click="clickUpdate">修改</el-button>
+        <el-button class="update_button"
+                   v-if="userStorage.user&&userStorage.user.roleLevel>=1"
+                   type="primary"
+                   @click="clickComment">评论</el-button>
       </div>
-
-
     </el-container>
   </div>
+
+  <el-dialog
+      class="comments-dialog"
+      v-model="dialogVisible"
+      width="60%"
+      title="评论"
+      style="left: 10%"
+      :modal="false"
+      :show-close="true"
+      :before-close="handleClose"
+  >
+    <el-scrollbar max-height="300px">
+    <template v-model="allCommentsList" v-if="allCommentsList&&allCommentsList.length">
+      <CommentEntry
+          v-for="comment in allCommentsList.values()"
+          :key="comment.commentId"
+          :comment="comment"
+      />
+    </template>
+  </el-scrollbar>
+    <el-input placeholder="发一条评论吧" v-model="commentsModel.commentContent"></el-input>
+    <el-button @click="clickPostComment">发布</el-button>
+  </el-dialog>
 </template>
 
 <style scoped lang="scss">
@@ -162,5 +209,9 @@ onBeforeRouteLeave((to)=>{
       margin-left: 20px;
     }
   }
+}
+
+.comments-dialog{
+
 }
 </style>

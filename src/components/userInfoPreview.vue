@@ -1,7 +1,8 @@
 <script setup lang="ts">
-import {computed, onMounted, ref} from "vue";
+import {onMounted,  ref} from "vue";
+import UserInterface from "../models/interfaces/UserInterface.ts";
 
-const userModel = defineModel()
+const userModel = defineModel<UserInterface>()
 
 const avatar = ref<HTMLDivElement>(null)
 

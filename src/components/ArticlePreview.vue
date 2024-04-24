@@ -29,7 +29,6 @@ const goToArticleDetail = () => {
     <el-text size="large" class="title" v-text="props.article.articleTitle"></el-text>
     <user-info-preview
         v-model="userModel"
-        style=" margin-bottom: 0px;"
         class="userinfo"/>
   </el-card>
 </template>

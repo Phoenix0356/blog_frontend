@@ -15,7 +15,7 @@ const router = useRouter()
 const route = useRoute()
 const userStorage = useUserInfoStore()
 
-const user = User.getInstance()
+const user:User = User.getInstance()
 const article:Article = Article.getInstance();
 
 const userModel = ref<UserInterface>()
@@ -30,16 +30,11 @@ const goToLogin = () => {
   router.push("/user/login")
 }
 const goToPost = () => {
-  //Todo
-  if(localStorage.getItem('token')){
-    router.push("/article/post")
-  }else {
-    alert("please login")
-  }
+  router.push("/article/post")
 }
 
-const logout = ()=>{
-  user.logout(()=>{
+const logout = async ()=>{
+  await user.logout(()=>{
     router.push("/").then(() => window.location.reload())
   })
 }
@@ -47,7 +42,7 @@ const logout = ()=>{
 
 watchEffect( async () => {
   if (route.path === '/') {
-   allArticleList.value = await article.getAllArticle();
+   allArticleList.value = await article.getAllArticleList();
   }
 })
 onMounted(async () => {
@@ -66,7 +61,7 @@ onMounted(async () => {
     <el-container >
       <el-aside class="left-container" width="200px">
 
-<!--        <el-avatar class="left-avatar" :src="userStorage.user?userStorage.user.userAvatarURL:null"/>-->
+<!--    <el-avatar class="left-avatar" :src="userStorage.user?userStorage.user.userAvatarURL:null"/>-->
         <user-info-preview
             class="left-avatar"
             v-model="userStorage.user"
@@ -129,8 +124,6 @@ onMounted(async () => {
       height: 100%;
       opacity: 0.8;
       .left-avatar{
-        ////margin-left: 50px;
-        //width: 100px;
         height: 110px;
       }
       .left-menu{

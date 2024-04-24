@@ -4,7 +4,6 @@ import router from "../../../router";
 import {useUserInfoStore} from "../../../stores/counter.ts";
 import {getUserRole} from "../../../utils/DataUtil.ts";
 import User from "../../../models/classes/User.ts";
-import userInterface from "../../../models/interfaces/UserInterface.ts";
 import UserInterface from "../../../models/interfaces/UserInterface.ts";
 
 const userRef = ref()
@@ -30,13 +29,13 @@ const tempUserModel = ref<UserInterface>({
 })
 const updateUserInfo = async () => {
   try {
-
-
     await userRef.value.validate();
     dialogVisible.value = false
-    userModel = await user.updateUser(tempUserModel.value.username)
-    if (userModel) {
-      userStorage.setUser(userModel)
+    if (tempUserModel.value.username !== userStorage.user.username) {
+      userModel = await user.updateUser(tempUserModel.value.username)
+      if (userModel) {
+        userStorage.setUser(userModel)
+      }
     }
   }catch (errors){
       alert("用户名非法")
@@ -55,7 +54,9 @@ onMounted(() => {
 
 const handleClose = () => {
     dialogVisible.value = false;
-    tempUserModel.value.username = userStorage.user.username
+    if (userStorage.user) {
+      tempUserModel.value.username = userStorage.user.username
+    }
 }
 
 </script>
@@ -66,7 +67,7 @@ const handleClose = () => {
   <el-text  class="username" size="large">用户名：{{ tempUserModel.username }}</el-text>
   <el-text  class="userRole" size="large">身份：{{ getUserRole(tempUserModel.roleLevel) }}</el-text>
   <el-button class="update_button" size="large" type="primary" plain @click="dialogVisible = true">修改</el-button>
-
+</el-container>
   <el-dialog
       class="dialog"
       v-model="dialogVisible"
@@ -88,8 +89,6 @@ const handleClose = () => {
     </el-form>
   </el-dialog>
 
-
-</el-container>
 </template>
 
 <style scoped lang="scss">

@@ -3,6 +3,7 @@ import {onMounted, reactive, ref} from "vue";
 import {useRoute,useRouter} from "vue-router";
 import Article from "../../../models/classes/Article.ts";
 
+
 const router = useRouter()
 const route = useRoute()
 const articleId = ref<string>(<string>route.query.articleId)

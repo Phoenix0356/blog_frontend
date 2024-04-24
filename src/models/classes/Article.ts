@@ -4,7 +4,7 @@ import {
     articleGet, articleSave,
     articleStaticUpdate,
     articleUserListGet
-} from "../../api/article.ts";
+} from "../../api/ArticleApi.ts";
 import ArticleInterface from "../interfaces/ArticleInterface.ts";
 class Article{
     private static instance: Article;
@@ -17,7 +17,7 @@ class Article{
         return this.instance;
     }
 
-    public getAllArticle():Promise<ArticleInterface[]> {
+    public async getAllArticleList():Promise<ArticleInterface[]> {
         return articleAllGet()
         .then(resp =>{
             if (resp.data.result == 1) {
@@ -28,8 +28,8 @@ class Article{
         })
     }
 
-    public getUserListArticle(strategy?:Strategy|null):Promise<ArticleInterface[]>{
-        return  articleUserListGet()
+    public async getUserListArticle(strategy?:Strategy|null):Promise<ArticleInterface[]>{
+        return articleUserListGet()
         .then( resp => {
             if (resp.data.result == 1){
                 return  resp.data.object
@@ -42,7 +42,7 @@ class Article{
         })
     }
 
-    public getArticle(articleId:any,strategy?:Strategy|null):Promise<ArticleInterface>{
+    public async getArticle(articleId:any,strategy?:Strategy|null):Promise<ArticleInterface>{
         return articleGet(articleId)
         .then(resp => {
             if (resp.data.result == 1){
@@ -56,9 +56,9 @@ class Article{
         })
     }
 
-    public updateArticleStatic(articleId:string,articleReadCount:number,
+    public async updateArticleStatic(articleId:string,articleReadCount:number,
                                articleUpvoteCount:number,articleBookmarkCount:number){
-        articleStaticUpdate({
+        await articleStaticUpdate({
             articleId: articleId,
             articleReadCount:articleReadCount,
             articleUpvoteCount: articleUpvoteCount,
@@ -72,9 +72,9 @@ class Article{
         })
     }
 
-    public updateArticleContent(articleId:string, articleTitle: string,
+    public async updateArticleContent(articleId:string, articleTitle: string,
                                 articleContent: string, strategy: Strategy){
-        articleContentUpdate({
+        await articleContentUpdate({
             articleId: articleId,
             articleTitle:articleTitle,
             articleContent:articleContent
@@ -87,8 +87,8 @@ class Article{
         })
     }
 
-    public saveArticle(articleForm:any,strategy:Strategy){
-        articleSave({
+    public async saveArticle(articleForm:any,strategy:Strategy){
+        await articleSave({
             articleTitle:articleForm.title,
             articleContent:articleForm.content
         }).then(resp =>{
