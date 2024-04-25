@@ -26,19 +26,20 @@ const articleModel = ref<ArticleInterface>({
   username: ""
 })
 
-const commentsModel = ref<CommentInterface>({
-  commentId: "",
-  commentReviseTime: "",
-  commentUpvoteCount: 0,
-  userAvatarURL: "",
-  username: "",
-  commentContent:""
-})
+// const commentsModel = ref<CommentInterface>({
+//   commentId: "",
+//   commentReviseTime: "",
+//   commentUpvoteCount: 0,
+//   userAvatarURL: "",
+//   username: "",
+//   commentContent:""
+// })
 
 const allCommentsList = ref<CommentInterface[]>([])
-
+const commentContent = ref("")
 const dialogVisible = ref(false)
 let articleId:any = null
+
 
 const clickComment = async () =>{
   dialogVisible.value = true
@@ -54,8 +55,10 @@ const clickUpdate = () => {
 }
 
 const clickPostComment = async () => {
-  await comments.saveComment(commentsModel.value.commentContent, articleId)
+
+  await comments.saveComment(commentContent.value, articleId)
   allCommentsList.value = await comments.getArticleCommentList(articleId)
+  commentContent.value = ""
 
 }
 const updateArticle = () => {
@@ -64,7 +67,7 @@ const updateArticle = () => {
 }
 
 const handleClose = () => {
-  commentsModel.value.commentContent = ""
+  commentContent.value = ""
   dialogVisible.value = false
 }
 
@@ -145,9 +148,9 @@ onBeforeRouteLeave((to)=>{
     <el-scrollbar max-height="300px">
     <template v-model="allCommentsList" v-if="allCommentsList&&allCommentsList.length">
       <CommentEntry
-          v-for="comment in allCommentsList.values()"
-          :key="comment.commentId"
-          :comment="comment"
+          v-for="comments in allCommentsList.values()"
+          :key="comments.commentId"
+          :comments="comments"
       />
     </template>
   </el-scrollbar>
@@ -155,7 +158,7 @@ onBeforeRouteLeave((to)=>{
       <el-input  placeholder="登录后评论"></el-input>
     </div>
     <div v-else>
-      <el-input  placeholder="发一条评论吧" v-model="commentsModel.commentContent"></el-input>
+      <el-input  placeholder="发一条评论吧" v-model="commentContent"></el-input>
       <el-button @click="clickPostComment">发布</el-button>
     </div>
 

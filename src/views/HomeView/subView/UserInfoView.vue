@@ -31,11 +31,13 @@ const updateUserInfo = async () => {
   try {
     await userRef.value.validate();
     dialogVisible.value = false
-    if (tempUserModel.value.username !== userStorage.user.username) {
+    if (userStorage.user&&tempUserModel.value.username !== userStorage.user.username) {
       userModel = await user.updateUser(tempUserModel.value.username)
       if (userModel) {
         userStorage.setUser(userModel)
       }
+    }else {
+      alert("用户名信息失败")
     }
   }catch (errors){
       alert("用户名非法")

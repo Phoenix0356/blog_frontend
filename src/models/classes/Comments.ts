@@ -1,5 +1,5 @@
 import CommentInterface from "../interfaces/CommentInterface";
-import {commentGet, commentArticleList, commentSave} from "../../api/CommentApi";
+import {commentGet, commentArticleList, commentSave, commentUpdate} from "../../api/CommentApi";
 
 class Comments{
     private static instance: Comments;
@@ -16,7 +16,7 @@ class Comments{
         return commentGet(commentId)
         .then(resp =>{
             if (resp.data.result == 1){
-                return resp.data.result
+                return resp.data.object
             }else {
                 alert(resp.data.msg)
             }
@@ -39,10 +39,23 @@ class Comments{
             commentContent:commentContent,
             commentArticleId:commentArticleId
         }).then(resp => {
-            if (resp.data.result == 1){
+            if (resp.data.result === 1){
                 //Todo
             } else {
                 alert(resp.data.msg);
+            }
+        })
+    }
+
+    public async updateComment(commentId:string,commentContent:string){
+        await commentUpdate({
+            commentId:commentId,
+            commentContent:commentContent
+        }).then(resp=>{
+            if (resp.data.result === 1){
+                console.log(resp.data.msg)
+            }else {
+                alert(resp.data.msg)
             }
         })
     }

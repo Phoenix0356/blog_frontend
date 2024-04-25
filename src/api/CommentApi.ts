@@ -2,9 +2,8 @@ import request from "../utils/request"
 
 export const commentGet = (commentId:string) =>
     request({
-        'url':'/comment/get',
+        'url':`/comment/get/${commentId}`,
         'method':'get',
-        'data':commentId
     })
 
 
@@ -14,10 +13,23 @@ export const commentArticleList = (data:string) =>
         'method':'get',
     })
 
-export const commentSave = (commentContent:any) =>
+export const commentSave = (data:any) =>
     request({
         'url':'/comment/save',
         'method':'post',
-        'data':commentContent
+        'data':data
     })
 
+export const commentUpdate = (data:any) =>
+    request({
+        'url':'/comment/update',
+        'method':'put',
+        'data':data
+    })
+
+export const commentDelete = (commentId:string) =>
+    request({
+        'url':'/comment/update',
+        'method':'delete',
+        'data':commentId
+    })
