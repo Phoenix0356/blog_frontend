@@ -1,9 +1,9 @@
 <script setup lang="ts">
-
 const curValue = defineModel({
   type: Number,
   required: true,
 })
+
 
 let isClicked = false
 const add = ()=>{

@@ -22,7 +22,8 @@ const userModel = ref<UserInterface>()
 const allArticleList = ref<ArticleInterface[]>([]);
 
 //菜单栏router
-const userBlogPath = "/article/userList"
+const userCollection = "/user/collection"
+const userBlog = "/article/userList"
 const userInfo = "/user/info"
 const homePage = "/"
 
@@ -74,7 +75,8 @@ onMounted(async () => {
         >
           <el-menu-item :index="homePage">主页</el-menu-item>
           <el-menu-item :index="userInfo" >我的信息</el-menu-item>
-          <el-menu-item :index="userBlogPath">我的博客</el-menu-item>
+          <el-menu-item :index="userBlog">我的博客</el-menu-item>
+          <el-menu-item :index="userCollection">我的收藏</el-menu-item>
         </el-menu>
 
       </el-aside>

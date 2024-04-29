@@ -8,10 +8,12 @@ import {useUserInfoStore} from "../../../stores/counter.ts";
 import Comments from "../../../models/classes/Comments.ts";
 import CommentInterface from "../../../models/interfaces/CommentInterface.ts";
 import CommentEntry from "../../../components/CommentEntry.vue";
+import Collection from "../../../models/classes/Collection.ts";
 
 const router = useRouter()
 const article = Article.getInstance()
 const comments = Comments.getInstance()
+const collection = Collection.getInstance()
 const userStorage = useUserInfoStore()
 
 const articleModel = ref<ArticleInterface>({
@@ -55,11 +57,18 @@ const clickUpdate = () => {
 }
 
 const clickPostComment = async () => {
-
   await comments.saveComment(commentContent.value, articleId)
   allCommentsList.value = await comments.getArticleCommentList(articleId)
   commentContent.value = ""
+}
 
+const clickStar = async () => {
+  if (userStorage.user) {
+    await collection.addArticleIntoCollection({
+      username: userStorage.user.username,
+      articleId:articleId
+    })
+  }
 }
 const updateArticle = () => {
  article.updateArticleStatic(articleId,articleModel.value.articleReadCount+1,
@@ -107,7 +116,7 @@ onBeforeRouteLeave((to)=>{
                         v-model="articleModel.articleBookmarkCount"
         >
           <template #icon>
-           <el-icon size="20"><Star /></el-icon>
+           <el-icon size="20" @click="clickStar"><Star /></el-icon>
           </template>
         </CountIndicator>
 

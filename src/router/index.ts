@@ -33,6 +33,11 @@ const router = createRouter({
                     name: 'userInfo',
                     component: () => import("../views/HomeView/subView/UserInfoView.vue")
                 },
+                {
+                    path: '/user/collection',
+                    name: 'userCollection',
+                    component: () => import("../views/HomeView/subView/UserCollectionView.vue")
+                },
             ]
         },
         {

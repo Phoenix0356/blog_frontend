@@ -38,11 +38,16 @@ const clickConfirmUpdate = async () => {
 </script>
 
 <template>
-<div>
-  <el-avatar  :src="commentsModel.userAvatarURL"/>
-  <el-text >{{commentsModel.commentContent}}</el-text>
-  <el-text >最后修改：{{commentsModel.commentReviseTime}}</el-text>
-  <el-button v-if="userStorage.user&&userStorage.user.username === commentsModel.username" :icon="Edit" circle @click="dialogVisible = true"/>
+<div class="root">
+  <div class="comments-content">
+    <el-avatar class="comment-avatar" :src="commentsModel.userAvatarURL"/>
+    <el-text class="comment-text" >:{{commentsModel.commentContent}}</el-text>
+  </div>
+  <div class="comment-static">
+    <el-text class="comment-reviseTime">最后修改：{{commentsModel.commentReviseTime}}</el-text>
+    <el-button class="comment-update-btn" v-if="userStorage.user&&userStorage.user.username === commentsModel.username" :icon="Edit" circle @click="dialogVisible = true"/>
+  </div>
+
 </div>
 <el-dialog
     v-model="dialogVisible"
@@ -67,5 +72,25 @@ const clickConfirmUpdate = async () => {
 </template>
 
 <style scoped lang="scss">
+.root{
+  .comments-content{
+    .comment-avatar{
+
+    }
+    .comment-text{
+      font-size: 20px;
+      margin-left: 2%;
+    }
+  }
+  .comment-static{
+    .comment-reviseTime{
+
+    }
+    .comment-update-btn{
+      margin-left: 1%;
+      margin-bottom: 1%;
+    }
+  }
+}
 
 </style>
