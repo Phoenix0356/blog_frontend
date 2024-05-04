@@ -78,7 +78,6 @@ const clickCollection = async () => {
   }
 }
 
-//Todo
 const clickAddToCollection = async (collectionName:string) => {
   let flag = false
   if (userStorage.user) {
@@ -92,14 +91,14 @@ const clickAddToCollection = async (collectionName:string) => {
     collectionDialogVisible.value = false
     ElNotification({
       title: 'Success',
-      message: `Add to ${collectionName} successfully `,
+      message: `添加到${collectionName}成功 `,
       type: 'success',
       duration: 1500,
     })
   }else {
     ElNotification({
       title: 'Failed',
-      message: `${collectionName} already contains the article`,
+      message: `文章已经在${collectionName}中`,
       type: 'error',
       duration: 1500,
     })
