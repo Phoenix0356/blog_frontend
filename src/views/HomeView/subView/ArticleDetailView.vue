@@ -9,6 +9,9 @@ import Comments from "../../../models/classes/Comments.ts";
 import CommentInterface from "../../../models/interfaces/CommentInterface.ts";
 import CommentEntry from "../../../components/CommentEntry.vue";
 import Collection from "../../../models/classes/Collection.ts";
+import {ElNotification} from "element-plus";
+import CollectionEntry from "../../../components/CollectionPreview.vue";
+import CollectionInterface from "../../../models/interfaces/CollectionInterface.ts";
 
 const router = useRouter()
 const article = Article.getInstance()
@@ -38,13 +41,15 @@ const articleModel = ref<ArticleInterface>({
 // })
 
 const allCommentsList = ref<CommentInterface[]>([])
+const allCollectionList = ref<CollectionInterface[]>([])
 const commentContent = ref("")
-const dialogVisible = ref(false)
+const commentDialogVisible = ref(false)
+const collectionDialogVisible = ref(false)
 let articleId:any = null
 
 
 const clickComment = async () =>{
-  dialogVisible.value = true
+  commentDialogVisible.value = true
   allCommentsList.value = await comments.getArticleCommentList(articleId)
 }
 const clickUpdate = () => {
@@ -62,11 +67,41 @@ const clickPostComment = async () => {
   commentContent.value = ""
 }
 
-const clickStar = async () => {
+const clickUpvote = () => {
+  articleModel.value.articleUpvoteCount++
+}
+
+const clickCollection = async () => {
+  collectionDialogVisible.value=true;
   if (userStorage.user) {
-    await collection.addArticleIntoCollection({
+    allCollectionList.value = await collection.getCollectionList(userStorage.user.username)
+  }
+}
+
+//Todo
+const clickAddToCollection = async (collectionName:string) => {
+  let flag = false
+  if (userStorage.user) {
+    flag = await collection.addArticleIntoCollection({
       username: userStorage.user.username,
-      articleId:articleId
+      articleId:articleId,
+      collectionName:collectionName
+    })
+  }
+  if (flag) {
+    collectionDialogVisible.value = false
+    ElNotification({
+      title: 'Success',
+      message: `Add to ${collectionName} successfully `,
+      type: 'success',
+      duration: 1500,
+    })
+  }else {
+    ElNotification({
+      title: 'Failed',
+      message: `${collectionName} already contains the article`,
+      type: 'error',
+      duration: 1500,
     })
   }
 }
@@ -75,9 +110,9 @@ const updateArticle = () => {
      articleModel.value.articleUpvoteCount,articleModel.value.articleBookmarkCount)
 }
 
-const handleClose = () => {
+const handleCommentClose = () => {
   commentContent.value = ""
-  dialogVisible.value = false
+  commentDialogVisible.value = false
 }
 
 onMounted(async ()=> {
@@ -89,7 +124,6 @@ onBeforeRouteLeave((to)=>{
   if (to.path !== `/article/${articleId}`){
     updateArticle()
   }
-
 })
 </script>
 
@@ -108,7 +142,7 @@ onBeforeRouteLeave((to)=>{
             v-model="articleModel.articleUpvoteCount"
         >
           <template #icon>
-            <el-icon size="20"><Medal /></el-icon>
+            <el-icon size="20" @click="clickUpvote"><Medal /></el-icon>
           </template>
         </CountIndicator>
 
@@ -116,7 +150,7 @@ onBeforeRouteLeave((to)=>{
                         v-model="articleModel.articleBookmarkCount"
         >
           <template #icon>
-           <el-icon size="20" @click="clickStar"><Star /></el-icon>
+           <el-icon size="20" @click="clickCollection"><Star /></el-icon>
           </template>
         </CountIndicator>
 
@@ -143,26 +177,25 @@ onBeforeRouteLeave((to)=>{
       </div>
     </el-container>
   </div>
-
   <el-dialog
       class="comments-dialog"
-      v-model="dialogVisible"
+      v-model="commentDialogVisible"
       width="60%"
       title="评论"
       style="left: 10%"
       :modal="false"
       :show-close="true"
-      :before-close="handleClose"
+      :before-close="handleCommentClose"
   >
     <el-scrollbar max-height="300px">
-    <template v-model="allCommentsList" v-if="allCommentsList&&allCommentsList.length">
-      <CommentEntry
-          v-for="comments in allCommentsList.values()"
-          :key="comments.commentId"
-          :comments="comments"
-      />
-    </template>
-  </el-scrollbar>
+      <template v-model="allCommentsList" v-if="allCommentsList&&allCommentsList.length">
+        <CommentEntry
+            v-for="comments in allCommentsList.values()"
+            :key="comments.commentId"
+            :comments="comments"
+        />
+      </template>
+    </el-scrollbar>
     <div v-if="!userStorage.user||userStorage.user.roleLevel<1" >
       <el-input  placeholder="登录后评论"></el-input>
     </div>
@@ -172,7 +205,30 @@ onBeforeRouteLeave((to)=>{
     </div>
 
   </el-dialog>
+  <el-dialog
+      class="collection-dialog"
+      v-model="collectionDialogVisible"
+      width="60%"
+      title="收藏夹"
+      style="left: 10%"
+      :modal="false"
+      :show-close="true"
+
+  >
+    <el-scrollbar max-height="300px">
+      <template v-model="allCollectionList" v-if="allCollectionList&&allCollectionList.length">
+        <collection-entry
+            v-for="collection in allCollectionList.values()"
+            :key="collection.collectionId"
+            :collection="collection"
+            @click="clickAddToCollection(collection.collectionName)"
+          >
+        </collection-entry>
+      </template>
+    </el-scrollbar>
+  </el-dialog>
 </template>
+
 
 <style scoped lang="scss">
 .layout{
@@ -220,6 +276,9 @@ onBeforeRouteLeave((to)=>{
     .article-main{
       padding: 0 20px;
       height: 455px;
+      .content{
+        white-space: pre-wrap;
+      }
     }
     .update_button{
       margin-top: 10px;

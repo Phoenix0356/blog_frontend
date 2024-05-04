@@ -1,4 +1,10 @@
-import {collectionAdd, collectionListGet} from "../../api/CollectionApi";
+import {
+    collectionAdd,
+    collectionArticleListGet,
+    collectionCreate,
+    collectionGet,
+    collectionListGet
+} from "../../api/CollectionApi";
 
 class Collection{
     private static instance:Collection
@@ -12,9 +18,9 @@ class Collection{
         return this.instance
     }
 
-    public async getAllArticleList(username:string){
-        return collectionListGet(username)
-        .then(resp => {
+    public async getAllArticleList(username:string,collectionName:string){
+        return collectionArticleListGet(username, collectionName)
+            .then(resp => {
             if (resp.data.result === 1){
                 return resp.data.object
             }else {
@@ -23,13 +29,43 @@ class Collection{
         })
     }
 
-    public async addArticleIntoCollection(data:any){
-        await collectionAdd(data)
+    public async getCollection(collectionId:string){
+        return collectionGet(collectionId)
         .then(resp => {
             if (resp.data.result === 1){
-                //todo
+                return resp.data.msg
+            }else{
+                alert(resp.data.msg)
+            }
+        })
+    }
+
+    public async getCollectionList(username:string){
+        return collectionListGet(username)
+        .then(resp => {
+            if (resp.data.result === 1){
+                return resp.data.object
+            }else {
+                resp.data.msg
+            }
+        })
+    }
+
+    public async addArticleIntoCollection(data:any){
+        return collectionAdd(data)
+        .then(resp => {
+            return resp.data.result === 1;
+        })
+    }
+
+    public async createCollection(data:any){
+        return collectionCreate(data)
+        .then(resp => {
+            if (resp.data.result === 1){
+                return true
             }else {
                 alert(resp.data.msg)
+                return false
             }
         })
     }

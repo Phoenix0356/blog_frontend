@@ -38,3 +38,10 @@ export const articleContentUpdate = (data:any) =>
         'method':'put',
         'data':data
     })
+
+export const articleDelete = (articleId:string) =>
+    request({
+        'url':`/article/delete/${articleId}`,
+        'method':'delete',
+    })
+

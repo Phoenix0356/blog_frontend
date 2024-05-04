@@ -1,6 +1,6 @@
 import {
     articleAllGet,
-    articleContentUpdate,
+    articleContentUpdate, articleDelete,
     articleGet, articleSave,
     articleStaticUpdate,
     articleUserListGet
@@ -97,8 +97,17 @@ class Article{
             }else {
                 alert(resp.data.msg)
             }
-        }).catch(error => {
-            console.log(error.response)
+        })
+    }
+
+    public async deleteArticle(articleId:string,strategy:Strategy){
+        await articleDelete(articleId)
+        .then(resp => {
+            if (resp.data.result === 1){
+                strategy()
+            }else {
+                alert(resp.data.msg)
+            }
         })
     }
 

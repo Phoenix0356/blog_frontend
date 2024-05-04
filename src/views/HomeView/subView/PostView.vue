@@ -14,12 +14,16 @@ const articleForm = reactive({
   content:''
 })
 const postArticle = async () =>{
-  article.saveArticle(articleForm,()=>router.push("/"))
+  await article.saveArticle(articleForm, () => router.push("/"))
 }
 
 const updateArticle = () => {
   article.updateArticleContent(articleId.value,articleForm.title,
       articleForm.content,()=> router.push(`/article/${articleId.value}`))
+}
+
+const deleteArticle = async () => {
+  await article.deleteArticle(articleId.value,() => router.push("/"))
 }
 
 onMounted(async () => {
@@ -54,6 +58,7 @@ onMounted(async () => {
             show-word-limit/>
       </el-form-item>
       <el-button style="margin-left: 63px" v-if="articleId" type="primary" @click="updateArticle">确认修改</el-button>
+      <el-button style="margin-left: 20px" v-if="articleId" type="primary" @click="deleteArticle">确认删除</el-button>
       <el-button style="margin-left: 63px" v-else type="primary" @click="postArticle">确认发布</el-button>
     </el-form>
 

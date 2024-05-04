@@ -4,22 +4,10 @@ const curValue = defineModel({
   required: true,
 })
 
-
-let isClicked = false
-const add = ()=>{
-  console.log(curValue.value)
-  if (!isClicked){
-    isClicked = true
-    curValue.value += 1
-  }else {
-    isClicked = false
-    curValue.value -= 1
-  }
-}
 </script>
 
 <template>
-  <el-container class="container" @click="add" >
+  <el-container class="container" >
     <slot name="icon"/>
     <el-text class="value">
       {{curValue}}

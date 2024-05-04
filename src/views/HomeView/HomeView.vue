@@ -61,8 +61,6 @@ onMounted(async () => {
   <div class="layout" >
     <el-container >
       <el-aside class="left-container" width="200px">
-
-<!--    <el-avatar class="left-avatar" :src="userStorage.user?userStorage.user.userAvatarURL:null"/>-->
         <user-info-preview
             class="left-avatar"
             v-model="userStorage.user"
@@ -76,7 +74,7 @@ onMounted(async () => {
           <el-menu-item :index="homePage">主页</el-menu-item>
           <el-menu-item :index="userInfo" >我的信息</el-menu-item>
           <el-menu-item :index="userBlog">我的博客</el-menu-item>
-          <el-menu-item :index="userCollection">我的收藏</el-menu-item>
+          <el-menu-item :index="userCollection">我的收藏夹</el-menu-item>
         </el-menu>
 
       </el-aside>

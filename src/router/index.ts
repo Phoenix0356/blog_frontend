@@ -36,8 +36,16 @@ const router = createRouter({
                 {
                     path: '/user/collection',
                     name: 'userCollection',
-                    component: () => import("../views/HomeView/subView/UserCollectionView.vue")
+                    component: () => import("../views/HomeView/subView/UserCollectionView.vue"),
+                    children:[
+                        {
+                            path: '/user/collection/:collectionName',
+                            name: 'CollectionArticles',
+                            component: () => import("../views/HomeView/subView/CollectionBlogView.vue")
+                        },
+                    ]
                 },
+
             ]
         },
         {
