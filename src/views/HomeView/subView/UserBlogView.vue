@@ -4,16 +4,21 @@ import {onMounted, ref} from "vue";
 import {useRouter} from "vue-router";
 import ArticleInterface from "../../../models/interfaces/ArticleInterface.ts";
 import Article from "../../../models/classes/Article.ts";
+import {useUserInfoStore} from "../../../stores/counter.ts";
 
 const router = useRouter()
 const userArticleList = ref<ArticleInterface[]>([])
 const article = Article.getInstance()
-const getUserArticle = async () =>{
-  userArticleList.value = await article.getUserListArticle(()=>router.push("/"))
-}
+const userStorage = useUserInfoStore()
 
-onMounted(() => {
-  getUserArticle()
+
+onMounted(async () => {
+  if(userStorage.user) {
+    userArticleList.value = await article.getUserListArticle(()=>router.push("/"))
+  }else {
+    alert("Please login")
+    await router.push('/')
+  }
 })
 
 </script>
