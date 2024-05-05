@@ -48,6 +48,9 @@
   onMounted(async () => {
     if (userStorage.user) {
       collectionList.value = await collection.getCollectionList(userStorage.user.username)
+    }else {
+      alert("Please login")
+      await router.push('/')
     }
   })
 </script>
