@@ -1,10 +1,14 @@
 <script setup lang="ts">
 import {onMounted,  ref} from "vue";
-import UserInterface from "../models/interfaces/UserInterface.ts";
+interface userPreview{
+  userAvatarURL:string
+  username:string
 
-const userModel = defineModel<UserInterface>()
+}
 
-const avatar = ref<HTMLDivElement>(null)
+const userModel = defineModel<userPreview>()
+
+const avatar = ref<HTMLDivElement|null>(null)
 
 // const userAvatarURL = computed(() => userModel.value ?
 //     userModel.value.userAvatarURL
@@ -16,8 +20,9 @@ const avatar = ref<HTMLDivElement>(null)
 // )
 
 onMounted(() => {
-  avatar.value.style.height = `${avatar.value.clientWidth}px`
-
+  if (avatar.value) {
+    avatar.value.style.height = `${avatar.value.clientWidth}px`
+  }
 })
 </script>
 

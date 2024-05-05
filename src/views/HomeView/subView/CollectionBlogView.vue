@@ -16,7 +16,9 @@ const getArticleList = async (username:string,collectionName:string) => {
 }
 onMounted(async () => {
   if (userStorage.user) {
-    await getArticleList(userStorage.user.username, collectionName)
+    if (typeof collectionName === "string") {
+      await getArticleList(userStorage.user.username, collectionName)
+    }
   }
 })
 </script>
