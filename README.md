@@ -2,7 +2,7 @@
 
 前后端分离项目
 
-前端项目：https://github.com/Phoenix0356/blog
+后端项目：https://github.com/Phoenix0356/blog
 
 访问网址：https://phoenix0356.xyz
 
