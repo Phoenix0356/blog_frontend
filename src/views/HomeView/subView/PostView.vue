@@ -54,7 +54,7 @@ onMounted(async () => {
             rows="22"
             type="textarea" placeholder="请输入正文"
             v-model="articleForm.content"
-            maxlength="3000"
+            maxlength="4000"
             show-word-limit/>
       </el-form-item>
       <el-button style="margin-left: 63px" v-if="articleId" type="primary" @click="updateArticle">确认修改</el-button>

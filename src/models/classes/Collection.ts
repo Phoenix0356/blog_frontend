@@ -18,8 +18,8 @@ class Collection{
         return this.instance
     }
 
-    public async getAllArticleList(username:string,collectionName:string){
-        return collectionArticleListGet(username, collectionName)
+    public async getAllArticleList(collectionId:string){
+        return collectionArticleListGet(collectionId)
             .then(resp => {
             if (resp.data.result === 1){
                 return resp.data.object

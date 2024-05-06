@@ -24,10 +24,10 @@
   const curCollectionName = ref('')
   const articleBreadcrumbVisible = ref(false)
 
-  const gotoCollection = (collectionName:string) => {
+  const gotoCollection = (collectionName:string,collectionId:string) => {
     articleBreadcrumbVisible.value = true
-    curCollectionName.value = collectionName
-    router.push( `/user/collection/${curCollectionName.value}`)
+    curCollectionName.value = collectionName;
+    router.push( `/user/collection/${collectionId}`)
   }
 
   const clickConformCreate = async () => {
@@ -69,7 +69,7 @@
               v-for="collection in collectionList"
               :key="collection.collectionId"
               :collection="collection"
-              @click="gotoCollection(collection.collectionName)"
+              @click="gotoCollection(collection.collectionName,collection.collectionId)"
           >
         </collection-entry>
         <el-button @click="createCollectionDialogVisible = true">创建收藏夹</el-button>

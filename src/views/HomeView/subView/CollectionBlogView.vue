@@ -10,14 +10,14 @@ const router = useRouter()
 const collectionArticleList = ref<ArticleInterface[]>([])
 const collection = Collection.getInstance()
 const userStorage = useUserInfoStore()
-let collectionName = router.currentRoute.value.params.collectionName
-const getArticleList = async (username:string,collectionName:string) => {
-  collectionArticleList.value =  await collection.getAllArticleList(username,collectionName)
+let curCollectionId = router.currentRoute.value.params.collectionId
+const getArticleList = async (collectionId:string) => {
+  collectionArticleList.value =  await collection.getAllArticleList(collectionId)
 }
 onMounted(async () => {
   if (userStorage.user) {
-    if (typeof collectionName === "string") {
-      await getArticleList(userStorage.user.username, collectionName)
+    if (typeof curCollectionId === "string") {
+      await getArticleList(curCollectionId)
     }
   }
 })

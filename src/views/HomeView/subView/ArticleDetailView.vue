@@ -71,6 +71,7 @@ const clickUpvote = () => {
   articleModel.value.articleUpvoteCount++
 }
 
+
 const clickCollection = async () => {
   collectionDialogVisible.value=true;
   if (userStorage.user) {
@@ -79,15 +80,18 @@ const clickCollection = async () => {
 }
 
 const clickAddToCollection = async (collectionName:string) => {
-  let flag = false
+  let addArticleFlag = false
   if (userStorage.user) {
-    flag = await collection.addArticleIntoCollection({
+    addArticleFlag = await collection.addArticleIntoCollection({
       username: userStorage.user.username,
       articleId:articleId,
       collectionName:collectionName
     })
   }
-  if (flag) {
+  if (addArticleFlag) {
+
+    articleModel.value.articleBookmarkCount++;
+
     collectionDialogVisible.value = false
     ElNotification({
       title: 'Success',

@@ -1,8 +1,8 @@
 import request from "../utils/request";
 
-export const collectionArticleListGet = (username: string, collectionName: string) =>
+export const collectionArticleListGet = (collectionId: string) =>
     request({
-        'url': `/collection/all/article?username=${username}&collectionName=${collectionName}`,
+        'url': `/collection/${collectionId}/articles`,
         'method': 'get',
     })
 

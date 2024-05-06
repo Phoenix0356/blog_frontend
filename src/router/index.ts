@@ -39,7 +39,7 @@ const router = createRouter({
                     component: () => import("../views/HomeView/subView/UserCollectionView.vue"),
                     children:[
                         {
-                            path: '/user/collection/:collectionName',
+                            path: '/user/collection/:collectionId',
                             name: 'CollectionArticles',
                             component: () => import("../views/HomeView/subView/CollectionBlogView.vue")
                         },

@@ -77,11 +77,11 @@ class User{
             username:username
         })
         .then(resp => {
-            if (resp.data.result == 1){
-                console.log(resp.data.object)
+            if (resp.data.result === 1){
                 return resp.data.object
             }else {
                 alert(resp.data.msg)
+                return null
             }
         })
     }

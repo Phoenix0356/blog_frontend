@@ -29,6 +29,7 @@ onMounted(() => {
 <template>
 <div class="root">
   <div ref="avatar" class="avatar-wrapper">
+    <!--Todo-->
     <el-avatar class="avatar" :src="userModel?userModel.userAvatarURL:'http://localhost:8093/avatar/default.jpg'"/>
   </div>
   <el-text  class="username" >{{userModel?userModel.username : "未登录"}}</el-text>

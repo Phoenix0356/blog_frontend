@@ -28,21 +28,21 @@ const tempUserModel = ref<UserInterface>({
   username:""
 })
 const updateUserInfo = async () => {
-  try {
+
     await userRef.value.validate();
-    dialogVisible.value = false
+
     if (userStorage.user&&tempUserModel.value.username !== userStorage.user.username) {
       userModel = await user.updateUser(tempUserModel.value.username)
       if (userModel) {
         userStorage.setUser(userModel)
+        dialogVisible.value = false
       }
     }else {
-      alert("用户名信息失败")
+      alert("新用户名与之前相同")
     }
-  }catch (errors){
-      alert("用户名非法")
-  }
+
 }
+
 
 onMounted(() => {
   if (userStorage.user){
@@ -85,9 +85,7 @@ const handleClose = () => {
         <el-input v-model="tempUserModel.username" :maxlength="20"/>
       </el-form-item>
       <el-button type="primary" @click="handleClose">取消</el-button>
-      <el-button type="primary" @click="updateUserInfo" >
-        确认
-      </el-button>
+      <el-button type="primary" @click="updateUserInfo" >确认</el-button>
     </el-form>
   </el-dialog>
 
