@@ -7,7 +7,7 @@ import Article from "../../models/classes/Article.ts";
 import UserInterface from "../../models/interfaces/UserInterface.ts";
 import User from "../../models/classes/User.ts";
 import {useUserInfoStore} from "../../stores/counter.ts";
-import UserInfoPreview from "../../components/userInfoPreview.vue";
+import UserInfoPreview from "../../components/UserInfoPreview.vue";
 
 
 

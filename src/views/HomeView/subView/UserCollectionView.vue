@@ -1,6 +1,6 @@
 <script setup lang="ts">
   import {onMounted, ref} from "vue";
-  import {useUserInfoStore} from "../../../stores/counter.ts";
+  import {useCollectionMapStore, useUserInfoStore} from "../../../stores/counter.ts";
   import Collection from "../../../models/classes/Collection.ts";
   import CollectionInterface from "../../../models/interfaces/CollectionInterface";
   import collectionInterface from "../../../models/interfaces/CollectionInterface";
@@ -17,17 +17,18 @@
   })
   const collectionList = ref<CollectionInterface[]>([])
   const userStorage = useUserInfoStore()
+  const collectionMapStorage = useCollectionMapStore()
   const collection = Collection.getInstance()
   const createCollectionDialogVisible = ref(false)
   const router = useRouter()
 
-  const curCollectionName = ref('')
+  const collectionClicked = ref<CollectionInterface>()
   const articleBreadcrumbVisible = ref(false)
 
-  const gotoCollection = (collectionName:string,collectionId:string) => {
+  const gotoCollection = (collectionId:string) => {
     articleBreadcrumbVisible.value = true
-    curCollectionName.value = collectionName;
-    router.push( `/user/collection/${collectionId}`)
+    collectionClicked.value = collectionMapStorage.collectionMap[collectionId]
+    router.push(`/user/collection/${collectionId}`)
   }
 
   const clickConformCreate = async () => {
@@ -39,6 +40,7 @@
         collectionDescription:createCollectionModel.value.collectionDescription
       })
       collectionList.value = await collection.getCollectionList(userStorage.user.username)
+      collectionMapStorage.setCollectionMap(collectionList.value)
     }
     if (flag) {
       createCollectionDialogVisible.value = false
@@ -48,6 +50,7 @@
   onMounted(async () => {
     if (userStorage.user) {
       collectionList.value = await collection.getCollectionList(userStorage.user.username)
+      collectionMapStorage.setCollectionMap(collectionList.value)
     }else {
       alert("Please login")
       await router.push('/')
@@ -59,17 +62,17 @@
   <div>
     <el-breadcrumb :separator-icon="ArrowRight">
       <el-breadcrumb-item :to="{ path: '/user/collection' }">我的收藏夹</el-breadcrumb-item>
-      <el-breadcrumb-item v-if="articleBreadcrumbVisible" :to="{ path: `/user/collection/${curCollectionName}`}">{{curCollectionName}}中的文章</el-breadcrumb-item>
+      <el-breadcrumb-item v-if="articleBreadcrumbVisible&&collectionClicked" :to="{ path: `/user/collection/${collectionClicked.collectionId}`}">{{collectionClicked.collectionName}}</el-breadcrumb-item>
     </el-breadcrumb>
 
     <div>
       <template v-if="$route.path === '/user/collection'">
         <collection-entry
               class="collections"
-              v-for="collection in collectionList"
+              v-for="collection in collectionMapStorage.collectionMap"
               :key="collection.collectionId"
               :collection="collection"
-              @click="gotoCollection(collection.collectionName,collection.collectionId)"
+              @click="gotoCollection(collection.collectionId)"
           >
         </collection-entry>
         <el-button @click="createCollectionDialogVisible = true">创建收藏夹</el-button>
@@ -113,7 +116,6 @@
     >
       确认创建
     </el-button>
-
   </el-dialog>
 </template>
 

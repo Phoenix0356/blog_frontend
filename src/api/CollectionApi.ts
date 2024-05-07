@@ -34,4 +34,18 @@ export const collectionCreate = (data:any) =>
         'data':data
     })
 
+export const collectionUpdate = (data:any) =>
+    request({
+        'url': '/collection/update',
+        'method': 'put',
+        'data':data
+    })
+
+export const collectionDelete = (collectionId:string)  =>
+    request({
+        'url': `/collection/delete/${collectionId}`,
+        'method': 'delete',
+    })
+
+
 

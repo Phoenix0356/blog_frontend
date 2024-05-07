@@ -1,7 +1,7 @@
 <script setup lang="ts">
 
 import {useRouter} from 'vue-router';
-import UserInfoPreview from "./userInfoPreview.vue";
+import UserInfoPreview from "./UserInfoPreview.vue";
 import {ref} from "vue";
 
 

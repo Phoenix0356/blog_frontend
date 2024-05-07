@@ -46,7 +46,7 @@ onMounted(async () => {
             style="width: 3000px"
             placeholder="请输入标题"
             v-model="articleForm.title"
-            maxlength="20"
+            maxlength="30"
             show-word-limit/>
       </el-form-item>
       <el-form-item  label="content">

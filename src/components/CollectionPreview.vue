@@ -1,5 +1,4 @@
 <script setup lang="ts">
-
 const props = defineProps(['collection'])
 
 </script>
@@ -12,6 +11,9 @@ const props = defineProps(['collection'])
     <el-text class="name">{{props.collection.collectionName}}</el-text>
     <el-text class="revise-time">{{props.collection.collectionReviseTime.slice(0, 19)}}</el-text>
   </el-card>
+
+
+
 </template>
 
 <style scoped lang="scss">

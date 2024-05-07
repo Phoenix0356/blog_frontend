@@ -1,9 +1,9 @@
 import {
     collectionAdd,
     collectionArticleListGet,
-    collectionCreate,
+    collectionCreate, collectionDelete,
     collectionGet,
-    collectionListGet
+    collectionListGet, collectionUpdate
 } from "../../api/CollectionApi";
 
 class Collection{
@@ -33,9 +33,10 @@ class Collection{
         return collectionGet(collectionId)
         .then(resp => {
             if (resp.data.result === 1){
-                return resp.data.msg
+                return resp.data.object
             }else{
                 alert(resp.data.msg)
+                return null
             }
         })
     }
@@ -66,6 +67,34 @@ class Collection{
             }else {
                 alert(resp.data.msg)
                 return false
+            }
+        })
+    }
+
+    public async updateCollection(collectionId:string,collectionName:string,collectionDescription:string){
+        return collectionUpdate({
+            collectionId:collectionId,
+            collectionName:collectionName,
+            collectionDescription:collectionDescription
+        })
+        .then(resp => {
+            if (resp.data.result === 1){
+                return true
+            }else {
+                alert(resp.data.msg)
+                return false
+            }
+        })
+    }
+
+    public async deleteCollection(collectionId:string){
+        return collectionDelete(collectionId)
+        .then(resp => {
+            if (resp.data.result === 1){
+                return true;
+            }else {
+                alert(resp.data.msg)
+                return false;
             }
         })
     }
