@@ -109,8 +109,10 @@ onMounted(async () => {
           </template>
           <router-view/>
         </el-main>
+        <el-footer class="right-footer">
+          <el-text style="margin-left: 40%">浙ICP备2024090842号</el-text>
+        </el-footer>
       </el-container>
-
     </el-container>
   </div>
 </template>
@@ -158,6 +160,13 @@ onMounted(async () => {
       .main-box {
         padding: 10px;
         margin-top: 10px;
+        background: antiquewhite;
+        border-radius: 10px;
+      }
+      .right-footer{
+        padding: 10px;
+        margin-top: 10px;
+        height: 6%;
         background: antiquewhite;
         border-radius: 10px;
       }
