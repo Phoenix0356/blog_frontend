@@ -17,8 +17,8 @@ class Article{
         return this.instance;
     }
 
-    public async getAllArticleList():Promise<ArticleInterface[]> {
-        return articleAllGet()
+    public async getAllArticleList(sortBy:number):Promise<ArticleInterface[]> {
+        return articleAllGet(sortBy)
         .then(resp =>{
             if (resp.data.result == 1) {
                 return resp.data.object

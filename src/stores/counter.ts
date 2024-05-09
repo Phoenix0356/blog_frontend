@@ -24,9 +24,15 @@ export const useCollectionMapStore = defineStore('collectionInfo',()=>{
         }
     }
     const deleteItemInMap = (collectionId:string) => {
-
         delete collectionMap.value[collectionId]
     }
-
     return {collectionMap,setCollectionMap,deleteItemInMap}
+})
+
+export const useCommonStore = defineStore('commonTemp',()=>{
+    const articleSortStrategy = ref(0)
+    const setSortStrategy = (sortStrategy:number) => {
+        articleSortStrategy.value = sortStrategy
+    }
+    return {articleSortStrategy,setSortStrategy}
 })

@@ -69,7 +69,8 @@ onMounted(async () => {
   />
   <el-button type="primary" @click="manageCollectionDialogVisible = true">编辑</el-button>
   <el-button type="primary" @click="deleteCollectionDialogVisible = true">删除收藏夹</el-button>
-  <el-button type="primary" >管理文章</el-button>
+
+
 
   <el-dialog
       class="collection-dialog"

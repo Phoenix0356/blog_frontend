@@ -6,7 +6,7 @@ import ArticlePreview from "../../components/ArticlePreview.vue";
 import Article from "../../models/classes/Article.ts";
 import UserInterface from "../../models/interfaces/UserInterface.ts";
 import User from "../../models/classes/User.ts";
-import {useUserInfoStore} from "../../stores/counter.ts";
+import {useCommonStore, useUserInfoStore} from "../../stores/counter.ts";
 import UserInfoPreview from "../../components/UserInfoPreview.vue";
 
 
@@ -14,12 +14,14 @@ import UserInfoPreview from "../../components/UserInfoPreview.vue";
 const router = useRouter()
 const route = useRoute()
 const userStorage = useUserInfoStore()
+const commonStorage = useCommonStore()
 
 const user:User = User.getInstance()
 const article:Article = Article.getInstance();
 
 const userModel = ref<UserInterface>()
 const allArticleList = ref<ArticleInterface[]>([]);
+const buttonClicked = ref(0);
 
 //菜单栏router
 const userCollection = "/user/collection"
@@ -40,10 +42,18 @@ const logout = async ()=>{
   })
 }
 
+const clickSort = async (sortStrategy:number) => {
+  commonStorage.setSortStrategy(sortStrategy)
+  buttonClicked.value = sortStrategy
+  allArticleList.value = await article.getAllArticleList(sortStrategy)
+}
+
 
 watchEffect( async () => {
   if (route.path === '/') {
-   allArticleList.value = await article.getAllArticleList();
+    await clickSort(commonStorage.articleSortStrategy)
+   // allArticleList.value = await article.getAllArticleList(0);
+   // buttonClicked.value = 0
   }
 })
 onMounted(async () => {
@@ -101,17 +111,28 @@ onMounted(async () => {
 
         <el-main class="main-box">
           <template v-if="$route.path === '/'&& allArticleList&&allArticleList.length">
-            <article-preview
-                v-for="article in allArticleList.values()"
-                :key="article.articleId"
-                :article="article"
-            />
+            <el-button-group>
+              <el-button :type="buttonClicked === 0?'primary':'plain'" text @click="clickSort(0)">默认排序</el-button>
+              <el-button :type="buttonClicked === 1?'primary':'plain'" text @click="clickSort(1)">按阅读量排序</el-button>
+              <el-button :type="buttonClicked === 2?'primary':'plain'" text @click="clickSort(2)">按点赞数排序</el-button>
+            </el-button-group>
+            <div>
+              <article-preview
+                  v-for="article in allArticleList.values()"
+                  :key="article.articleId"
+                  :article="article"
+              />
+            </div>
           </template>
           <router-view/>
         </el-main>
-        <el-footer class="right-footer">
-          <el-text style="margin-left: 40%">浙ICP备2024090842号</el-text>
+
+        <el-footer class="right-footer" v-if="$route.path === '/'" >
+          <img src="https://beian.mps.gov.cn/web/assets/logo01.6189a29f.png" style="width: 16px; margin-left: 26%;" alt=“”>
+          <a href="https://beian.mps.gov.cn/#/query/webSearch?code=33010902003837" target="_blank" >浙公网安备33010902003837号</a>
+          <a href="https://beian.miit.gov.cn/#/Integrated/index" target="_blank" style="margin-left: 1%">浙ICP备2024090842号</a>
         </el-footer>
+
       </el-container>
     </el-container>
   </div>

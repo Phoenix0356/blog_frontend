@@ -7,9 +7,9 @@ export const articleGet = (articleId:any) =>
     })
 
 
-export const articleAllGet = () =>
+export const articleAllGet = (sortBy:number) =>
     request({
-        'url':'/article/get/all',
+        'url':`/article/get/all?sortBy=${sortBy}`,
         'method':'get'
     })
 

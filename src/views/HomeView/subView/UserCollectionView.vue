@@ -75,6 +75,7 @@
               @click="gotoCollection(collection.collectionId)"
           >
         </collection-entry>
+
         <el-button @click="createCollectionDialogVisible = true">创建收藏夹</el-button>
 
       </template>
