@@ -52,8 +52,6 @@ const clickSort = async (sortStrategy:number) => {
 watchEffect( async () => {
   if (route.path === '/') {
     await clickSort(commonStorage.articleSortStrategy)
-   // allArticleList.value = await article.getAllArticleList(0);
-   // buttonClicked.value = 0
   }
 })
 onMounted(async () => {

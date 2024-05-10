@@ -20,7 +20,7 @@ const goToArticleDetail = () => {
 </script>
 
 <template>
-
+<div class="wrapper">
   <el-card class="article-card"
            style="width: 100%"
            shadow="hover"
@@ -31,24 +31,38 @@ const goToArticleDetail = () => {
         v-model="userModel"
         class="userinfo"/>
   </el-card>
+  <div class="slot-container">
+    <slot class="operation-card" name="operationCard"/>
+  </div>
+</div>
 </template>
 
 <style scoped lang="scss">
-.article-card{
+.wrapper {
   position: relative;
-  border-radius: 10px;
-  height: 80px;
+  .article-card {
+    position: relative;
+    z-index: 0;
+    border-radius: 10px;
+    height: 80px;
+    .title {
+      bottom: 30px;
+      position: absolute;
+    }
 
-  .title {
-    bottom: 30px;
-    position: absolute;
-
+    .userinfo {
+      position: absolute;
+      left: 900px;
+      height: 70%;
+      width: 50px;
+    }
   }
-  .userinfo{
+  .slot-container {
     position: absolute;
-    left: 900px;
-    height: 70%;
-    width: 50px;
+    width: 15%;
+    top: 0;
+    left: 85%;
+    z-index: 1;
   }
 }
 </style>

@@ -28,9 +28,7 @@ const tempUserModel = ref<UserInterface>({
   username:""
 })
 const updateUserInfo = async () => {
-
     await userRef.value.validate();
-
     if (userStorage.user&&tempUserModel.value.username !== userStorage.user.username) {
       userModel = await user.updateUser(tempUserModel.value.username)
       if (userModel) {
@@ -47,7 +45,6 @@ const updateUserInfo = async () => {
 onMounted(() => {
   if (userStorage.user){
     tempUserModel.value = JSON.parse(JSON.stringify(userStorage.user))
-    console.log(tempUserModel.value)
   }else {
     alert("Please login")
     router.push('/')
@@ -55,10 +52,10 @@ onMounted(() => {
 })
 
 const handleClose = () => {
-    dialogVisible.value = false;
-    if (userStorage.user) {
-      tempUserModel.value.username = userStorage.user.username
-    }
+  if (userStorage.user) {
+    tempUserModel.value.username = userStorage.user.username
+  }
+  dialogVisible.value = false;
 }
 
 </script>

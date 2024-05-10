@@ -1,7 +1,7 @@
 import {
     collectionAdd,
-    collectionArticleListGet,
-    collectionCreate, collectionDelete,
+    collectionArticleListGet, collectionArticleNote,
+    collectionCreate, collectionDelete, collectionDeleteArticle,
     collectionGet,
     collectionListGet, collectionUpdate
 } from "../../api/CollectionApi";
@@ -59,6 +59,18 @@ class Collection{
         })
     }
 
+    public async saveArticleNoteIntoCollection(collectionId:string, data:any){
+        return collectionArticleNote(collectionId,data)
+        .then(resp => {
+            if (resp.data.result === 1){
+                return true
+            }else {
+                alert(resp.data.msg)
+                return false
+            }
+        })
+    }
+
     public async createCollection(data:any){
         return collectionCreate(data)
         .then(resp => {
@@ -87,6 +99,17 @@ class Collection{
         })
     }
 
+    public async deleteCollectionArticle(collectionId:string,articleId:string){
+        return collectionDeleteArticle(collectionId,articleId)
+        .then(resp => {
+            if (resp.data.result === 1){
+                return true;
+            }else {
+                alert(resp.data.msg)
+                return false;
+            }
+        })
+    }
     public async deleteCollection(collectionId:string){
         return collectionDelete(collectionId)
         .then(resp => {

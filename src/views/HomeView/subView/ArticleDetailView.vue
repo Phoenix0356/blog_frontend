@@ -20,6 +20,7 @@ const collection = Collection.getInstance()
 const userStorage = useUserInfoStore()
 
 const articleModel = ref<ArticleInterface>({
+  collectionArticleNote: "",
   articleBookmarkCount: 0,
   articleContent: "",
   articleId: "",

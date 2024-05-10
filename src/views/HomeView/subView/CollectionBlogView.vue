@@ -6,6 +6,8 @@ import {onMounted, ref} from "vue";
 import {useCollectionMapStore, useUserInfoStore} from "../../../stores/counter";
 import {useRouter} from "vue-router";
 import collectionInterface from "../../../models/interfaces/CollectionInterface.ts";
+import OperationCard from "../../../components/OperationCard.vue";
+
 
 const router = useRouter()
 const collectionArticleList = ref<ArticleInterface[]>([])
@@ -15,9 +17,14 @@ const collectionMapStorage = useCollectionMapStore()
 
 const manageCollectionDialogVisible = ref(false)
 const deleteCollectionDialogVisible = ref(false)
+const manageRemarkDialogVisible = ref(false)
 
 const tempCollectionName= ref('')
 const tempCollectionDescription = ref('')
+const articleNote = ref({
+  articleId: '',
+  articleNote: ''
+})
 let collectionModel:collectionInterface = {
   collectionId:'',
   collectionDescription: "",
@@ -25,7 +32,9 @@ let collectionModel:collectionInterface = {
   collectionReviseTime: "",
   collectionUsername: "",
 };
+
 let curCollectionId = router.currentRoute.value.params.collectionId
+
 const clickConformUpdate = async () => {
   let updateFlag = await collection.updateCollection(collectionModel.collectionId,
       tempCollectionName.value,
@@ -49,6 +58,42 @@ const clickConformDelete = async () =>{
   }
 }
 
+const clickRead = (articleId:string) => {
+  router.push(`/article/${articleId}`)
+}
+
+const clickRemove = async (articleId:string) => {
+  if (typeof curCollectionId === "string") {
+    let isDeleted = await collection.deleteCollectionArticle(curCollectionId, articleId)
+    if(isDeleted){
+      collectionArticleList.value = await collection.getAllArticleList(curCollectionId)
+    }
+  }
+}
+
+const clickNote = async (articleId:string,collectionArticleNote:string) => {
+  articleNote.value.articleNote = collectionArticleNote
+  articleNote.value.articleId = articleId
+  manageRemarkDialogVisible.value = true
+}
+
+const clickConformNote = async ()=>{
+  if (typeof curCollectionId === "string") {
+    let isSuccess = await collection.saveArticleNoteIntoCollection(curCollectionId, {
+      articleId: articleNote.value.articleId,
+      articleNote: articleNote.value.articleNote
+    })
+    if (isSuccess){
+      manageRemarkDialogVisible.value = false
+      for(let article of collectionArticleList.value){
+        if(article.articleId === articleNote.value.articleId) {
+          article.collectionArticleNote = articleNote.value.articleNote
+        }
+      }
+    }
+  }
+}
+
 onMounted(async () => {
   if (userStorage.user) {
     if (typeof curCollectionId === "string") {
@@ -63,10 +108,25 @@ onMounted(async () => {
 
 <template>
   <article-preview
+      class="article-preview"
       v-for="article in collectionArticleList"
       :key="article.articleId"
       :article="article"
-  />
+  >
+    <template #operationCard>
+      <operation-card class="operation-card">
+        <el-button @click="clickRead(article.articleId)">阅读</el-button>
+        <el-button @click="clickRemove(article.articleId)">移除</el-button>
+        <el-tooltip
+            :content="'备注：'+article.collectionArticleNote"
+            placement="left"
+
+        >
+          <el-button @click="clickNote(article.articleId,article.collectionArticleNote)">备注</el-button>
+        </el-tooltip>
+      </operation-card>
+    </template>
+  </article-preview>
   <el-button type="primary" @click="manageCollectionDialogVisible = true">编辑</el-button>
   <el-button type="primary" @click="deleteCollectionDialogVisible = true">删除收藏夹</el-button>
 
@@ -116,9 +176,24 @@ onMounted(async () => {
     <el-button @click="clickConformDelete">确认</el-button>
     <el-button @click="deleteCollectionDialogVisible = false">取消</el-button>
 
+
+  </el-dialog>
+
+  <el-dialog
+      v-model="manageRemarkDialogVisible"
+      :show-close="true"
+  >
+    <el-text>备注：</el-text>
+    <el-input v-model="articleNote.articleNote"
+              type="textarea"
+              placeholder="添加备注"
+              maxlength="30"
+              show-word-limit
+    >
+    </el-input>
+    <el-button type="primary" @click="clickConformNote">确认</el-button>
   </el-dialog>
 </template>
 
 <style scoped lang="scss">
-
 </style>
