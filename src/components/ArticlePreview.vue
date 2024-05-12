@@ -52,7 +52,7 @@ const goToArticleDetail = () => {
 
     .userinfo {
       position: absolute;
-      left: 900px;
+      left: 92%;
       height: 70%;
       width: 50px;
     }

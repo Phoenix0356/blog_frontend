@@ -18,10 +18,15 @@ const avatar = ref<HTMLDivElement|null>(null)
 //     userModel.value.username
 //     : "未登录"
 // )
+const resizeObserver = new ResizeObserver(() => {
+  if (avatar.value) {
+    avatar.value.style.height = `${avatar.value.clientWidth}px`
+  }
+});
 
 onMounted(() => {
   if (avatar.value) {
-    avatar.value.style.height = `${avatar.value.clientWidth}px`
+    resizeObserver.observe(avatar.value);
   }
 })
 </script>
@@ -38,9 +43,9 @@ onMounted(() => {
 
 <style scoped lang="scss">
 .root {
-    display: flex;
-    flex-direction: column;
-    align-items: center;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
   .avatar-wrapper {
     width: 40%;
     .avatar {
@@ -49,7 +54,7 @@ onMounted(() => {
     }
   }
   .username {
-    margin-top: 5%;
+    margin-top: 2%;
     color: #181818;
     font-size: 15px;
   }

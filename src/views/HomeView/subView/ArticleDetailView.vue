@@ -132,17 +132,17 @@ onBeforeRouteLeave((to)=>{
 </script>
 
 <template>
-  <div class="layout">
+
     <el-container class="article-container">
       <el-header  class="article-header">
-        <el-text class="title" >{{ articleModel.articleTitle }}</el-text>
+        <el-text class="title position-abs" >{{ articleModel.articleTitle }}</el-text>
 
-        <el-text class="revise-time" >最后修改：{{ articleModel.articleReviseTime.slice(0, 19) }}</el-text>
+        <el-text class="revise-time position-abs" >最后修改：{{ articleModel.articleReviseTime.slice(0, 19) }}</el-text>
 
-        <el-text class="read-count" >阅读次数：{{ articleModel.articleReadCount }}</el-text>
+        <el-text class="read-count position-abs" >阅读次数：{{ articleModel.articleReadCount }}</el-text>
 
         <CountIndicator
-            class="upvote-count"
+            class="upvote-count position-abs"
             v-model="articleModel.articleUpvoteCount"
         >
           <template #icon>
@@ -150,7 +150,7 @@ onBeforeRouteLeave((to)=>{
           </template>
         </CountIndicator>
 
-        <CountIndicator class="bookmark-count"
+        <CountIndicator class="bookmark-count position-abs"
                         v-model="articleModel.articleBookmarkCount"
         >
           <template #icon>
@@ -159,7 +159,7 @@ onBeforeRouteLeave((to)=>{
         </CountIndicator>
 
         <el-avatar
-            class="avatar"
+            class="avatar position-abs"
             :src="articleModel.userAvatarURL"/>
       </el-header>
 
@@ -180,7 +180,7 @@ onBeforeRouteLeave((to)=>{
                    @click="clickComment">评论</el-button>
       </div>
     </el-container>
-  </div>
+
   <el-dialog
       class="comments-dialog"
       v-model="commentDialogVisible"
@@ -235,63 +235,55 @@ onBeforeRouteLeave((to)=>{
 
 
 <style scoped lang="scss">
-.layout{
-  background: antiquewhite;
-  .article-container{
-    .article-header{
-      height: 40px;
-      .title{
-        margin-top: 12px;
-        font-size: 20px;
-        position: absolute;
-      }
-      .revise-time{
-        font-family:monospace;
-        margin-top: 20px;
-        margin-left: 440px;
-        position: absolute;
-      }
-      .read-count{
-        font-family:monospace;
-        margin-top: 20px;
-        margin-left: 650px;
-        position: absolute;
-      }
-      .upvote-count{
-        margin-top: 16px;
-        margin-left: 770px;
-        position: absolute;
-      }
-      .bookmark-count{
-        margin-top: 16px;
-        margin-left: 820px;
-        position: absolute;
-      }
-      .avatar{
-
-        margin-left: 890px;
-        position: absolute;
-      }
+.article-container{
+  width: 100%;
+  height: 100%;
+  .article-header{
+    height: 8%;
+    display: flex;
+    flex-direction: row;
+    align-items: center;
+    position: relative;
+    .title{
+      font-size: 20px;
     }
-    .divider{
-      height: 10px;
-      margin: 5px;
+    .revise-time{
+      left: 50%;
     }
-    .article-main{
-      padding: 0 20px;
-      height: 455px;
-      .content{
-        white-space: pre-wrap;
-      }
+    .read-count{
+      left: 72%;
     }
-    .update_button{
-      margin-top: 10px;
-      margin-left: 20px;
+    .upvote-count{
+      left: 82%;
     }
+    .bookmark-count{
+      left: 87%;
+    }
+    .avatar{
+      position: absolute;
+      left: 94%;
+    }
+  }
+  .divider{
+    height: 1%;
+    margin: 0.5%;
+  }
+  .article-main{
+    padding: 0 2%;
+    height: 50%;
+    .content{
+      white-space: pre-wrap;
+    }
+  }
+  .update_button{
+    margin-top: 1%;
+    margin-left: 2%;
   }
 }
 
-.comments-dialog{
-
+.position-abs{
+  position: absolute;
 }
+
+
 </style>

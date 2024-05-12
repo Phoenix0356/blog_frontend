@@ -66,129 +66,130 @@ onMounted(async () => {
 </script>
 
 <template>
-  <div class="layout" >
-    <el-container >
-      <el-aside class="left-container" width="200px">
-        <user-info-preview
-            class="left-avatar"
-            v-model="userStorage.user"
-        />
-        <el-menu class="left-menu"
-                 default-active="2"
-                 text-color="#fff"
-                 active-color="#fff"
-                 :router = true
-        >
-          <el-menu-item :index="homePage">主页</el-menu-item>
-          <el-menu-item :index="userInfo" >我的信息</el-menu-item>
-          <el-menu-item :index="userBlog">我的博客</el-menu-item>
-          <el-menu-item :index="userCollection">我的收藏夹</el-menu-item>
-        </el-menu>
+  <el-container class="layout">
+    <el-aside class="left-container" >
+      <user-info-preview
+          class="left-avatar"
+          v-model="userStorage.user"
+      />
+      <el-menu class="left-menu"
+               default-active="2"
+               text-color="#fff"
+               active-color="#fff"
+               :router = true
+      >
+        <el-menu-item :index="homePage">主页</el-menu-item>
+        <el-menu-item :index="userInfo" >我的信息</el-menu-item>
+        <el-menu-item :index="userBlog">我的博客</el-menu-item>
+        <el-menu-item :index="userCollection">我的收藏夹</el-menu-item>
+      </el-menu>
 
-      </el-aside>
+    </el-aside>
 
-      <el-container class="right-container">
-        <el-header class="header-box">
+    <el-container class="right-container">
+      <el-header class="header-box">
+        <div>
+          <el-button class="button"
+                     v-if="!userStorage.user"
+                     type="primary"
+                     @click="goToLogin">登录</el-button>
+
+          <el-button class="button"
+                     v-if="userStorage.user&&userStorage.user.roleLevel>=2"
+                     type="primary"
+                     @click="goToPost">发布</el-button>
+
+          <el-button class="button"
+                     v-if="userStorage.user"
+                     type="primary"
+                     @click="logout">登出</el-button>
+        </div>
+      </el-header>
+
+      <el-main class="main-box">
+        <template v-if="$route.path === '/'&& allArticleList&&allArticleList.length">
+          <el-button-group>
+            <el-button :type="buttonClicked === 0?'primary':'plain'" text @click="clickSort(0)">默认排序</el-button>
+            <el-button :type="buttonClicked === 1?'primary':'plain'" text @click="clickSort(1)">按阅读量排序</el-button>
+            <el-button :type="buttonClicked === 2?'primary':'plain'" text @click="clickSort(2)">按点赞数排序</el-button>
+          </el-button-group>
           <div>
-            <el-button class="login-button"
-                       v-if="!userStorage.user"
-                       type="primary"
-                       @click="goToLogin">登录</el-button>
-
-            <el-button class="post-button"
-                       v-if="userStorage.user&&userStorage.user.roleLevel>=2"
-                       type="primary"
-                       @click="goToPost">发布</el-button>
-
-            <el-button class="logout-button"
-                       v-if="userStorage.user"
-                       type="primary"
-                       @click="logout">登出</el-button>
+            <article-preview
+                v-for="article in allArticleList.values()"
+                :key="article.articleId"
+                :article="article"
+            />
           </div>
-        </el-header>
+        </template>
+        <router-view/>
+      </el-main>
 
-        <el-main class="main-box">
-          <template v-if="$route.path === '/'&& allArticleList&&allArticleList.length">
-            <el-button-group>
-              <el-button :type="buttonClicked === 0?'primary':'plain'" text @click="clickSort(0)">默认排序</el-button>
-              <el-button :type="buttonClicked === 1?'primary':'plain'" text @click="clickSort(1)">按阅读量排序</el-button>
-              <el-button :type="buttonClicked === 2?'primary':'plain'" text @click="clickSort(2)">按点赞数排序</el-button>
-            </el-button-group>
-            <div>
-              <article-preview
-                  v-for="article in allArticleList.values()"
-                  :key="article.articleId"
-                  :article="article"
-              />
-            </div>
-          </template>
-          <router-view/>
-        </el-main>
+      <el-footer class="right-footer" v-if="$route.path === '/'" >
+        <img src="https://beian.mps.gov.cn/web/assets/logo01.6189a29f.png" style="width: 16px; margin-left: 26%;" alt=“”>
+        <a href="https://beian.mps.gov.cn/#/query/webSearch?code=33010902003837" target="_blank" >浙公网安备33010902003837号</a>
+        <a href="https://beian.miit.gov.cn/#/Integrated/index" target="_blank" style="margin-left: 1%">浙ICP备2024090842号</a>
+      </el-footer>
 
-        <el-footer class="right-footer" v-if="$route.path === '/'" >
-          <img src="https://beian.mps.gov.cn/web/assets/logo01.6189a29f.png" style="width: 16px; margin-left: 26%;" alt=“”>
-          <a href="https://beian.mps.gov.cn/#/query/webSearch?code=33010902003837" target="_blank" >浙公网安备33010902003837号</a>
-          <a href="https://beian.miit.gov.cn/#/Integrated/index" target="_blank" style="margin-left: 1%">浙ICP备2024090842号</a>
-        </el-footer>
-
-      </el-container>
     </el-container>
-  </div>
+  </el-container>
 </template>
 
 <style scoped>
-.layout{
-  background: url("../../assets/home-bg.jpg");
+
+.layout {
+  width: 100%;
+  height: 100%;
+  background-position: center;
   background-size: cover;
-    .left-container{
-      margin:10px;
-      height: 100%;
-      opacity: 0.8;
-      .left-avatar{
-        height: 110px;
-      }
-      .left-menu{
-        margin-top: 10px;
-        height: 540px;
-        background: #2c3e50;
-        border-radius: 10px;
-      }
+  background-image: url("../../assets/home-bg.jpg");
 
-    }
-    .right-container {
-      margin:10px;
-      opacity: 0.8;
-      height: 661px;
-      .header-box {
-        background: #f2f2f2;
-        border-radius: 10px;
-        .post-button{
-          margin-top: 13px;
-          margin-left: 5px;
-        }
-        .login-button{
-          margin-top: 13px;
-          margin-right: 10px;
-        }
-        .logout-button{
-          margin-top: 13px;
-          margin-right: 10px;
-        }
+  .left-container {
+    margin: 0.5%;
+    height: 98%;
+    width: 16.5%;
+    opacity: 0.8;
 
-      }
-      .main-box {
-        padding: 10px;
-        margin-top: 10px;
-        background: antiquewhite;
-        border-radius: 10px;
-      }
-      .right-footer{
-        padding: 10px;
-        margin-top: 10px;
-        height: 6%;
-        background: antiquewhite;
-        border-radius: 10px;
-      }
+    display: flex;
+    flex-direction: column;
+    .left-avatar {
+      height: 18%;
     }
+    .left-menu {
+      height: 82%;
+      background: #2c3e50;
+      border-radius: 10px;
+    }
+  }
+
+  .right-container {
+    margin: 0.5%;
+    opacity: 0.8;
+    height: 98%;
+
+    .header-box {
+      background: #f2f2f2;
+      border-radius: 10px;
+    }
+
+    .main-box {
+      padding: 1%;
+      margin-top: 1%;
+      background: antiquewhite;
+      border-radius: 10px;
+    }
+
+    .right-footer {
+      padding: 1%;
+      margin-top: 1%;
+      height: 6%;
+      background: antiquewhite;
+      border-radius: 10px;
+    }
+  }
+}
+
+.button{
+  margin-top: 1.5%;
+  margin-left: 1%;
 }
 </style>

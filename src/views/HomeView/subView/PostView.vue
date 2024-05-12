@@ -41,7 +41,7 @@ onMounted(async () => {
     <el-form :model="articleForm"
              label-width="auto"
              style="max-width: 100%">
-      <el-form-item label="title">
+      <el-form-item class="title" label="title">
         <el-input
             style="width: 3000px"
             placeholder="请输入标题"
@@ -49,7 +49,7 @@ onMounted(async () => {
             maxlength="30"
             show-word-limit/>
       </el-form-item>
-      <el-form-item  label="content">
+      <el-form-item  class="content" label="content">
         <el-input
             rows="22"
             type="textarea" placeholder="请输入正文"
@@ -57,15 +57,21 @@ onMounted(async () => {
             maxlength="4000"
             show-word-limit/>
       </el-form-item>
-      <el-button style="margin-left: 63px" v-if="articleId" type="primary" @click="updateArticle">确认修改</el-button>
-      <el-button style="margin-left: 20px" v-if="articleId" type="primary" @click="deleteArticle">确认删除</el-button>
-      <el-button style="margin-left: 63px" v-else type="primary" @click="postArticle">确认发布</el-button>
     </el-form>
-
   </el-container>
+  <el-button class="left-most-button" v-if="articleId" type="primary" @click="updateArticle">确认修改</el-button>
+  <el-button class="button" v-if="articleId" type="primary" @click="deleteArticle">确认删除</el-button>
+  <el-button class="left-most-button" v-else type="primary" @click="postArticle">确认发布</el-button>
 </div>
 </template>
 
 <style scoped lang="scss">
+
+.left-most-button{
+  margin-left: 6%;
+}
+.button{
+  margin-left: 2%
+}
 
 </style>

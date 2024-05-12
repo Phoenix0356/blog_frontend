@@ -9,9 +9,10 @@ import { RouterView } from 'vue-router'
 </template>
 
 <style lang="scss" >
-*{
-  padding: 0;
+html, body, #app {
+  height: 100%;
   margin: 0;
+  padding: 0;
 }
 
 
