@@ -61,8 +61,8 @@ class Article{
         await articleStaticUpdate({
             articleId: articleId,
             articleReadCount:articleReadCount,
-            articleUpvoteCount: articleUpvoteCount,
-            articleBookmarkCount: articleBookmarkCount
+            articleUpvoteCountChange: articleUpvoteCount,
+            articleBookmarkCountChange: articleBookmarkCount
         }).then(resp => {
             if (resp.data.result == 1){
                 //Todo

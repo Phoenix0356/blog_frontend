@@ -10,7 +10,7 @@ export const userLogin = (data:any) =>
 export const userLogout = () =>
     request({
         'url':'/user/logout',
-        'method':'delete',
+        'method':'post',
     })
 
 export const userRegister = (data:any) =>

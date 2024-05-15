@@ -18,6 +18,8 @@ const article = Article.getInstance()
 const comments = Comments.getInstance()
 const collection = Collection.getInstance()
 const userStorage = useUserInfoStore()
+let upvoteCountIncrement = 0;
+let bookmarkCountIncrement = 0;
 
 const articleModel = ref<ArticleInterface>({
   collectionArticleNote: "",
@@ -70,6 +72,7 @@ const clickPostComment = async () => {
 
 const clickUpvote = () => {
   articleModel.value.articleUpvoteCount++
+  upvoteCountIncrement++;
 }
 
 
@@ -92,6 +95,7 @@ const clickAddToCollection = async (collectionName:string) => {
   if (addArticleFlag) {
 
     articleModel.value.articleBookmarkCount++;
+    bookmarkCountIncrement++;
 
     collectionDialogVisible.value = false
     ElNotification({
@@ -110,8 +114,8 @@ const clickAddToCollection = async (collectionName:string) => {
   }
 }
 const updateArticle = () => {
- article.updateArticleStatic(articleId,articleModel.value.articleReadCount+1,
-     articleModel.value.articleUpvoteCount,articleModel.value.articleBookmarkCount)
+ article.updateArticleStatic(articleId,articleModel.value.articleReadCount,
+     upvoteCountIncrement,bookmarkCountIncrement)
 }
 
 const handleCommentClose = () => {
@@ -248,16 +252,16 @@ onBeforeRouteLeave((to)=>{
       font-size: 20px;
     }
     .revise-time{
-      left: 50%;
+      left: 45%;
     }
     .read-count{
-      left: 72%;
+      left: 67%;
     }
     .upvote-count{
-      left: 82%;
+      left: 79%;
     }
     .bookmark-count{
-      left: 87%;
+      left: 86%;
     }
     .avatar{
       position: absolute;

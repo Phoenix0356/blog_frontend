@@ -35,7 +35,9 @@ const login = async () => {
     await userRef.value.validate();
     const token:string = await user.login(userModel.value.username,userModel.value.password,
         ()=>{router.push('/')})
-    localStorage.setItem('token', 'Bearer ' + token)
+    if(token){
+      localStorage.setItem('token', 'Bearer ' + token)
+    }
   } catch (error) {
     console.log(error);
     return;
