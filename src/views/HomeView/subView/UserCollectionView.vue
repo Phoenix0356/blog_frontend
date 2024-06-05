@@ -128,9 +128,6 @@
 }
 
 .collection-dialog{
-  //.collection-name{
-  //
-  //}
   .collection-description{
     margin-top: 3%;
   }

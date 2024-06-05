@@ -57,12 +57,14 @@ class Article{
     }
 
     public async updateArticleStatic(articleId:string,articleReadCount:number,
-                               articleUpvoteCount:number,articleBookmarkCount:number){
+                               articleUpvoteCount:number,articleBookmarkCount:number,
+                                     articleMessageType:number){
         await articleStaticUpdate({
             articleId: articleId,
             articleReadCount:articleReadCount,
             articleUpvoteCountChange: articleUpvoteCount,
-            articleBookmarkCountChange: articleBookmarkCount
+            articleBookmarkCountChange: articleBookmarkCount,
+            articleMessageType:articleMessageType
         }).then(resp => {
             if (resp.data.result == 1){
                 //Todo

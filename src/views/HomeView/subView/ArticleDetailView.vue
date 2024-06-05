@@ -12,14 +12,17 @@ import Collection from "../../../models/classes/Collection.ts";
 import {ElNotification} from "element-plus";
 import CollectionEntry from "../../../components/CollectionPreview.vue";
 import CollectionInterface from "../../../models/interfaces/CollectionInterface.ts";
+import MessageType from "../../../models/enums/MessageType.ts";
 
 const router = useRouter()
 const article = Article.getInstance()
 const comments = Comments.getInstance()
 const collection = Collection.getInstance()
 const userStorage = useUserInfoStore()
+const messageType = MessageType
 let upvoteCountIncrement = 0;
 let bookmarkCountIncrement = 0;
+let articleMessageType = 0;
 
 const articleModel = ref<ArticleInterface>({
   collectionArticleNote: "",
@@ -73,6 +76,7 @@ const clickPostComment = async () => {
 const clickUpvote = () => {
   articleModel.value.articleUpvoteCount++
   upvoteCountIncrement++;
+  activatedMessageType(messageType.UpVote)
 }
 
 
@@ -94,8 +98,9 @@ const clickAddToCollection = async (collectionName:string) => {
   }
   if (addArticleFlag) {
 
-    articleModel.value.articleBookmarkCount++;
-    bookmarkCountIncrement++;
+    articleModel.value.articleBookmarkCount++
+    activatedMessageType(messageType.Bookmark)
+    bookmarkCountIncrement++
 
     collectionDialogVisible.value = false
     ElNotification({
@@ -115,14 +120,18 @@ const clickAddToCollection = async (collectionName:string) => {
 }
 const updateArticle = () => {
  article.updateArticleStatic(articleId,articleModel.value.articleReadCount,
-     upvoteCountIncrement,bookmarkCountIncrement)
+     upvoteCountIncrement,bookmarkCountIncrement,articleMessageType)
 }
 
 const handleCommentClose = () => {
   commentContent.value = ""
   commentDialogVisible.value = false
 }
-
+const activatedMessageType = (type:number) => {
+  if((articleMessageType&type)===0){
+    articleMessageType+=type;
+  }
+}
 onMounted(async ()=> {
   articleId = router.currentRoute.value.params.articleId
   articleModel.value = await article.getArticle(articleId, () => router.push("/"))

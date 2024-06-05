@@ -120,7 +120,6 @@ onMounted(async () => {
         <el-tooltip
             :content="'备注：'+article.collectionArticleNote"
             placement="left"
-
         >
           <el-button @click="clickNote(article.articleId,article.collectionArticleNote)">备注</el-button>
         </el-tooltip>

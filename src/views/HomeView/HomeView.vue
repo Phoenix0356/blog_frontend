@@ -87,8 +87,8 @@ onMounted(async () => {
     </el-aside>
 
     <el-container class="right-container">
-      <el-header class="header-box">
-        <div>
+      <el-header class="header-box flex-row">
+        <div class="buttons flex-row">
           <el-button class="button"
                      v-if="!userStorage.user"
                      type="primary"
@@ -104,6 +104,15 @@ onMounted(async () => {
                      type="primary"
                      @click="logout">登出</el-button>
         </div>
+        <div class="mailbox-container flex-row">
+          <el-icon
+              size="40">
+            <Message />
+          </el-icon>
+        </div>
+
+
+
       </el-header>
 
       <el-main class="main-box">
@@ -169,6 +178,15 @@ onMounted(async () => {
     .header-box {
       background: #f2f2f2;
       border-radius: 10px;
+      align-items: center;
+      position: relative;
+      .buttons{
+        position: absolute;
+      }
+      .mailbox-container{
+        position: absolute;
+        left: 90%;
+      }
     }
 
     .main-box {
@@ -191,5 +209,10 @@ onMounted(async () => {
 .button{
   margin-top: 1.5%;
   margin-left: 1%;
+}
+
+.flex-row{
+  display: flex;
+  flex-direction: row;
 }
 </style>
