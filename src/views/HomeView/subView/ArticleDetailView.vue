@@ -1,6 +1,7 @@
 <script setup lang="ts">
 import {onBeforeRouteLeave, useRouter} from "vue-router";
 import {onMounted, ref} from "vue";
+import {activatedMessageType} from "../../../utils/DataUtil.ts";
 import ArticleInterface from "../../../models/interfaces/ArticleInterface.ts";
 import CountIndicator from "../../../components/CountIndicator.vue";
 import Article from "../../../models/classes/Article.ts";
@@ -76,7 +77,7 @@ const clickPostComment = async () => {
 const clickUpvote = () => {
   articleModel.value.articleUpvoteCount++
   upvoteCountIncrement++;
-  activatedMessageType(messageType.UpVote)
+  articleMessageType = activatedMessageType(articleMessageType,messageType.UPVOTE.value)
 }
 
 
@@ -99,7 +100,7 @@ const clickAddToCollection = async (collectionName:string) => {
   if (addArticleFlag) {
 
     articleModel.value.articleBookmarkCount++
-    activatedMessageType(messageType.Bookmark)
+    articleMessageType = activatedMessageType(articleMessageType,messageType.BOOKMARK.value)
     bookmarkCountIncrement++
 
     collectionDialogVisible.value = false
@@ -127,11 +128,7 @@ const handleCommentClose = () => {
   commentContent.value = ""
   commentDialogVisible.value = false
 }
-const activatedMessageType = (type:number) => {
-  if((articleMessageType&type)===0){
-    articleMessageType+=type;
-  }
-}
+
 onMounted(async ()=> {
   articleId = router.currentRoute.value.params.articleId
   articleModel.value = await article.getArticle(articleId, () => router.push("/"))
@@ -145,7 +142,6 @@ onBeforeRouteLeave((to)=>{
 </script>
 
 <template>
-
     <el-container class="article-container">
       <el-header  class="article-header">
         <el-text class="title position-abs" >{{ articleModel.articleTitle }}</el-text>

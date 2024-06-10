@@ -74,18 +74,12 @@ const clickConfirmUpdate = async () => {
 <style scoped lang="scss">
 .root{
   .comments-content{
-    .comment-avatar{
-
-    }
     .comment-text{
       font-size: 20px;
       margin-left: 2%;
     }
   }
   .comment-static{
-    .comment-reviseTime{
-
-    }
     .comment-update-btn{
       margin-left: 1%;
       margin-bottom: 1%;

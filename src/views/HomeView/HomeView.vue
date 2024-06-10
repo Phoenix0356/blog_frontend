@@ -8,8 +8,7 @@ import UserInterface from "../../models/interfaces/UserInterface.ts";
 import User from "../../models/classes/User.ts";
 import {useCommonStore, useUserInfoStore} from "../../stores/counter.ts";
 import UserInfoPreview from "../../components/UserInfoPreview.vue";
-
-
+import MessageBox from "../../components/messagebox/MessageBox.vue";
 
 const router = useRouter()
 const route = useRoute()
@@ -17,7 +16,7 @@ const userStorage = useUserInfoStore()
 const commonStorage = useCommonStore()
 
 const user:User = User.getInstance()
-const article:Article = Article.getInstance();
+const article:Article = Article.getInstance()
 
 const userModel = ref<UserInterface>()
 const allArticleList = ref<ArticleInterface[]>([]);
@@ -89,29 +88,24 @@ onMounted(async () => {
     <el-container class="right-container">
       <el-header class="header-box flex-row">
         <div class="buttons flex-row">
-          <el-button class="button"
+          <el-button class="guide-button"
                      v-if="!userStorage.user"
                      type="primary"
                      @click="goToLogin">登录</el-button>
 
-          <el-button class="button"
+          <el-button class="guide-button"
                      v-if="userStorage.user&&userStorage.user.roleLevel>=2"
                      type="primary"
                      @click="goToPost">发布</el-button>
 
-          <el-button class="button"
+          <el-button class="guide-button"
                      v-if="userStorage.user"
                      type="primary"
                      @click="logout">登出</el-button>
         </div>
         <div class="mailbox-container flex-row">
-          <el-icon
-              size="40">
-            <Message />
-          </el-icon>
+          <MessageBox v-if="userStorage.user&&userStorage.user.roleLevel>=1"/>
         </div>
-
-
 
       </el-header>
 
@@ -178,7 +172,7 @@ onMounted(async () => {
     .header-box {
       background: #f2f2f2;
       border-radius: 10px;
-      align-items: center;
+
       position: relative;
       .buttons{
         position: absolute;
@@ -206,13 +200,10 @@ onMounted(async () => {
   }
 }
 
-.button{
+.guide-button{
   margin-top: 1.5%;
   margin-left: 1%;
 }
 
-.flex-row{
-  display: flex;
-  flex-direction: row;
-}
+
 </style>

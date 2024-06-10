@@ -16,6 +16,15 @@ html, body, #app {
   margin: 0;
   padding: 0;
 }
-
+.flex-row{
+  display: flex;
+  flex-direction: row;
+  align-items: center;
+}
+.flex-column{
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+}
 
 </style>

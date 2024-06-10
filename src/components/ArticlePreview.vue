@@ -4,8 +4,6 @@ import {useRouter} from 'vue-router';
 import UserInfoPreview from "./UserInfoPreview.vue";
 import {ref} from "vue";
 
-
-
 const props = defineProps(['article'])
 const router = useRouter()
 const userModel = ref({

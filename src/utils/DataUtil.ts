@@ -5,3 +5,10 @@ export const getUserRole = (userRoleLevel:number):string=>{
     else if (userRoleLevel === 2) return "创作者"
     else return "管理员"
 }
+
+export const activatedMessageType = (articleMessageType:number,type:number) => {
+    if((articleMessageType&type)===0){
+        articleMessageType+=type;
+    }
+    return articleMessageType;
+}
