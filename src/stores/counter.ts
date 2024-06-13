@@ -11,7 +11,13 @@ export const useUserInfoStore = defineStore('userInfo', () => {
     function setUser(newUser: UserInterface) {
         user.value = newUser
     }
-    return { user, setUser}
+
+    function isVisitor():boolean{
+        if(!user.value) return true
+        return user.value.roleLevel<1
+    }
+
+    return { user, setUser, isVisitor}
 },{
     persist: true
 })

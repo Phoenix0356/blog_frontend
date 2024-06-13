@@ -3,7 +3,7 @@ import Messages from "../../models/classes/Messages.ts";
 import {onMounted, ref} from "vue";
 import MessageInterface from "../../models/interfaces/MessageInterface.ts";
 import MessageType from "../../models/enums/MessageType.ts";
-import DetailedDialog from "./DetailedDialog.vue";
+import MessageDialog from "./MessageDialog.vue";
 
 const haveNewUpvoteMessage = ref(false)
 const haveNewBookMarkMessage = ref(false)
@@ -37,6 +37,12 @@ const clickReload = async () => {
   bookmarkDialogVisible.value = false
   upvoteDialogVisible.value = false
   await getAndClassifyMessages()
+}
+
+const handleMessageEntriesClose = (list:MessageInterface[]) => {
+  for(let message of list){
+    message.messageIsPulled = true;
+  }
 }
 
 const getAndClassifyMessages = async () => {
@@ -87,14 +93,16 @@ onMounted(() => {
     </div>
   </el-popover>
 
-  <DetailedDialog
+  <MessageDialog
       v-model="upvoteDialogVisible"
-      :messages = upvoteMessageList.values()
+      :messages = [...upvoteMessageList.values()]
+      @close="handleMessageEntriesClose(upvoteMessageList)"
   />
 
-  <DetailedDialog
+  <MessageDialog
       v-model="bookmarkDialogVisible"
-      :messages = bookmarkMessageList.values()
+      :messages = [...bookmarkMessageList.values()]
+      @close="handleMessageEntriesClose(bookmarkMessageList)"
   />
 
 

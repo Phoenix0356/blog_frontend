@@ -1,10 +1,9 @@
 <script setup lang="ts">
 import { useRouter,useRoute} from 'vue-router'
-import {onMounted,ref, watchEffect} from "vue";
+import {ref, watchEffect} from "vue";
 import ArticleInterface from "../../models/interfaces/ArticleInterface.ts"
 import ArticlePreview from "../../components/ArticlePreview.vue";
 import Article from "../../models/classes/Article.ts";
-import UserInterface from "../../models/interfaces/UserInterface.ts";
 import User from "../../models/classes/User.ts";
 import {useCommonStore, useUserInfoStore} from "../../stores/counter.ts";
 import UserInfoPreview from "../../components/UserInfoPreview.vue";
@@ -18,7 +17,7 @@ const commonStorage = useCommonStore()
 const user:User = User.getInstance()
 const article:Article = Article.getInstance()
 
-const userModel = ref<UserInterface>()
+// const userModel = ref<UserInterface>()
 const allArticleList = ref<ArticleInterface[]>([]);
 const buttonClicked = ref(0);
 
@@ -36,8 +35,9 @@ const goToPost = () => {
 }
 
 const logout = async ()=>{
+  await router.push("/")
   await user.logout(()=>{
-    router.push("/").then(() => window.location.reload())
+    window.location.reload()
   })
 }
 
@@ -53,14 +53,15 @@ watchEffect( async () => {
     await clickSort(commonStorage.articleSortStrategy)
   }
 })
-onMounted(async () => {
-  if (route.path === '/') {
-      if (localStorage.getItem('token')) {
-          userModel.value = await user.getUser();
-          userStorage.setUser(userModel.value)
-      }
-    }
-});
+
+// onMounted(async () => {
+//   if (route.path === '/') {
+//       if (localStorage.getItem('token')) {
+//           userModel.value = await user.getUser();
+//           userStorage.setUser(userModel.value)
+//       }
+//     }
+// });
 
 </script>
 

@@ -28,7 +28,8 @@ class User{
         await userLogout()
         .then(resp =>{
             if (resp.data.result == 1) {
-                localStorage.clear();
+                localStorage.clear()
+                sessionStorage.clear()
                 strategy()
             }else {
                 alert(resp.data.msg)
@@ -39,7 +40,7 @@ class User{
         })
     }
 
-    public async login(username:string,password:string,strategy:Strategy):Promise<string>{
+    public async login(username:string,password:string,strategy:Strategy):Promise<UserInterface>{
         return userLogin({
             username: username,
             password: password
@@ -47,7 +48,7 @@ class User{
         .then(resp => {
             if (resp.data.result == 1){
                 strategy()
-                return resp.data.object.token
+                return resp.data.object
             }else {
                 alert(resp.data.msg)
             }

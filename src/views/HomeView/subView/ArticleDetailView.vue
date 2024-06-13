@@ -75,6 +75,10 @@ const clickPostComment = async () => {
 }
 
 const clickUpvote = () => {
+  if(!userStorage||userStorage.isVisitor()){
+    alert("请先登录")
+    return
+  }
   articleModel.value.articleUpvoteCount++
   upvoteCountIncrement++;
   articleMessageType = activatedMessageType(articleMessageType,messageType.UPVOTE.value)
@@ -82,6 +86,10 @@ const clickUpvote = () => {
 
 
 const clickCollection = async () => {
+  if(!userStorage||userStorage.isVisitor()){
+    alert("请先登录")
+    return
+  }
   collectionDialogVisible.value=true;
   if (userStorage.user) {
     allCollectionList.value = await collection.getCollectionList(userStorage.user.username)
@@ -135,7 +143,7 @@ onMounted(async ()=> {
 })
 
 onBeforeRouteLeave((to)=>{
-  if (to.path !== `/article/${articleId}`){
+  if (to.path !== `/article/${articleId}` && (upvoteCountIncrement>0 || bookmarkCountIncrement>0)){
     updateArticle()
   }
 })

@@ -24,6 +24,7 @@ let userModel = null
 const tempUserModel = ref<UserInterface>({
   password: "",
   roleLevel: 0,
+  token:"",
   userAvatarURL: "",
   username:""
 })
