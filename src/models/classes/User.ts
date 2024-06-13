@@ -57,7 +57,7 @@ class User{
         })
     }
     public async register(username:string,password:string,
-                    avatarBase64:string,strategy:Strategy):Promise<string> {
+                    avatarBase64:string,strategy:Strategy):Promise<UserInterface> {
         return userRegister({
             username: username,
             password: password,
@@ -66,7 +66,7 @@ class User{
         .then(resp => {
             if (resp.data.result == 1){
                 strategy()
-                return resp.data.object.token
+                return resp.data.object
             }else {
                 alert(resp.data.msg)
             }

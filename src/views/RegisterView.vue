@@ -4,12 +4,15 @@ import {useRouter} from "vue-router";
 import {ElMessage, UploadFile, UploadProps} from "element-plus";
 import UserInterface from "../models/interfaces/UserInterface.ts";
 import User from "../models/classes/User.ts";
+import {useUserInfoStore} from "../stores/counter.ts";
 
-
+const userStorage = useUserInfoStore()
 const userRef = ref()
 const router = useRouter()
-const userModel = reactive<UserInterface>({roleLevel: 0,
+const userModel = reactive<UserInterface>({
+  roleLevel: 0,
   userAvatarURL: "",
+  token:"",
   password: "",
   username: ""
 })
@@ -38,9 +41,10 @@ const register = async () => {
   }
   try {
     await userRef.value.validate();
-    const token:string = await user.register(userModel.username,userModel.password,
+    const regUser:UserInterface = await user.register(userModel.username,userModel.password,
         avatarBase64,()=>router.push("/"))
-    localStorage.setItem('token', 'Bearer ' + token)
+    localStorage.setItem('token', 'Bearer ' + regUser.token)
+    userStorage.setUser( await user.getUser())
   } catch (error) {
     console.log(error);
     return;
@@ -90,7 +94,7 @@ const beforeAvatarUpload: UploadProps['beforeUpload'] = (rawFile) => {
               :auto-upload="false"
               :limit="1"
           >
-            <img v-if="imageUrl" :src="imageUrl" class="avatar"  />
+            <img v-if="imageUrl" :src="imageUrl" class="avatar"   alt=""/>
             <el-icon v-else class="avatar-uploader-icon"><Plus /></el-icon>
           </el-upload>
         <el-form-item class="username" prop="username">
