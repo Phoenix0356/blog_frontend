@@ -28,7 +28,7 @@ class Article{
         })
     }
 
-    public async getUserListArticle(strategy?:Strategy|null):Promise<ArticleInterface[]>{
+    public async getUserArticleList(strategy?:Strategy|null):Promise<ArticleInterface[]>{
         return articleUserListGet()
         .then( resp => {
             if (resp.data.result == 1){

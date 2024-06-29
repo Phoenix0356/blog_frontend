@@ -77,7 +77,7 @@ onMounted(() => {
       </el-badge>
     </template>
 
-    <div class="flex-column">
+    <div class="flex-col">
 
       <el-button class="box-button" v-if="!haveNewUpvoteMessage" @click="clickUpvote">收到的赞</el-button>
       <el-badge class="box-button" v-if="haveNewUpvoteMessage" is-dot>

@@ -11,7 +11,6 @@ const props = defineProps({
 })
 
 const emit = defineEmits(['close'])
-
 const determineMessageType = (message:MessageInterface):string => {
   if(message.messageType === messageType.UPVOTE.name){
     return '点赞'

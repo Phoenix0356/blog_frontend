@@ -34,6 +34,10 @@ const goToPost = () => {
   router.push("/article/post")
 }
 
+const goToTag = () => {
+  router.push("/tag")
+}
+
 const logout = async ()=>{
   await router.push("/")
   await user.logout(()=>{
@@ -97,12 +101,17 @@ watchEffect( async () => {
           <el-button class="guide-button"
                      v-if="userStorage.user&&userStorage.user.roleLevel>=2"
                      type="primary"
-                     @click="goToPost">发布</el-button>
+                     @click="goToPost">发布文章</el-button>
+
+          <el-button class="guide-button"
+                     v-if="userStorage.user&&userStorage.user.roleLevel>=3"
+                     type="primary"
+                     @click="goToTag">管理标签</el-button>
 
           <el-button class="guide-button"
                      v-if="userStorage.user"
                      type="primary"
-                     @click="logout">登出</el-button>
+                     @click="logout">登出账号</el-button>
         </div>
         <div class="mailbox-container flex-row">
           <MessageBox v-if="userStorage.user&&userStorage.user.roleLevel>=1"/>
@@ -139,7 +148,6 @@ watchEffect( async () => {
 </template>
 
 <style scoped>
-
 .layout {
   width: 100%;
   height: 100%;

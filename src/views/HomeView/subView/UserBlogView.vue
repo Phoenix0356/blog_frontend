@@ -14,7 +14,7 @@ const userStorage = useUserInfoStore()
 
 onMounted(async () => {
   if(userStorage.user) {
-    userArticleList.value = await article.getUserListArticle(()=>router.push("/"))
+    userArticleList.value = await article.getUserArticleList(()=>router.push("/"))
   }else {
     alert("Please login")
     await router.push('/')

@@ -10,7 +10,7 @@ const curValue = defineModel({
   <el-container class="container" >
     <slot name="icon"/>
     <el-text class="value">
-      {{curValue<999?curValue:"999+"}}
+      {{curValue<=999?curValue:"999+"}}
     </el-text>
   </el-container>
 </template>
