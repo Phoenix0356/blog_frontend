@@ -1,7 +1,7 @@
 <script setup lang="ts">
 import {PropType} from 'vue'
 import MessageInterface from "../../models/interfaces/MessageInterface.ts";
-import messageType from "../../models/enums/MessageType.ts";
+import messageType from "../../models/enums/MessageTypeEnum.ts";
 
 const props = defineProps({
   messages: {

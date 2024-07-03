@@ -2,7 +2,7 @@
 import Messages from "../../models/classes/Messages.ts";
 import {onMounted, ref} from "vue";
 import MessageInterface from "../../models/interfaces/MessageInterface.ts";
-import MessageType from "../../models/enums/MessageType.ts";
+import MessageTypeEnum from "../../models/enums/MessageTypeEnum.ts";
 import MessageDialog from "./MessageDialog.vue";
 
 const haveNewUpvoteMessage = ref(false)
@@ -19,7 +19,7 @@ const clickUpvote = async () => {
   bookmarkDialogVisible.value = false
   upvoteDialogVisible.value = true
 
-  if(haveNewUpvoteMessage&&await messages.confirmMessage(MessageType.UPVOTE.value)){
+  if(haveNewUpvoteMessage&&await messages.confirmMessage(MessageTypeEnum.UPVOTE.value)){
     haveNewUpvoteMessage.value = false;
   }
 }
@@ -28,7 +28,7 @@ const clickBookmark = async () => {
   upvoteDialogVisible.value = false
   bookmarkDialogVisible.value = true
 
-  if(haveNewBookMarkMessage&&await messages.confirmMessage(MessageType.BOOKMARK.value)){
+  if(haveNewBookMarkMessage&&await messages.confirmMessage(MessageTypeEnum.BOOKMARK.value)){
     haveNewBookMarkMessage.value = false;
   }
 }
@@ -50,7 +50,7 @@ const getAndClassifyMessages = async () => {
   upvoteMessageList.value = []
   bookmarkMessageList.value = []
   for(let message of messageList){
-    if(message.messageType === MessageType.UPVOTE.name){
+    if(message.messageType === MessageTypeEnum.UPVOTE.name){
       if (!message.messageIsPulled){
         haveNewUpvoteMessage.value = true;
       }

@@ -15,7 +15,7 @@ export const collectionGet = (collectionId:string) =>
 
 export const collectionListGet = (username:string) =>
     request({
-        'url': `/collection/all?username=${username}`,
+        'url': `/collection/all/${username}`,
         'method': 'get',
     })
 

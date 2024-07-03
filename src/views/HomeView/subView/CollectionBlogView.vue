@@ -109,7 +109,7 @@ onMounted(async () => {
 <template>
   <article-preview
       class="article-preview"
-      v-for="article in collectionArticleList"
+      v-for="article in collectionArticleList.values()"
       :key="article.articleId"
       :article="article"
   >

@@ -89,13 +89,14 @@ class Article{
         })
     }
 
-    public async saveArticle(articleForm:any,strategy:Strategy){
-        await articleSave({
+    public async saveArticle(articleForm:any,strategy:Strategy):Promise<ArticleInterface>{
+        return articleSave({
             articleTitle:articleForm.title,
             articleContent:articleForm.content
         }).then(resp =>{
             if (resp.data.result == 1){
                 strategy()
+                return resp.data.object
             }else {
                 alert(resp.data.msg)
             }

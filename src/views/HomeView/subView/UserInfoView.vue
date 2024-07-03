@@ -82,9 +82,9 @@ const handleClose = () => {
       <el-form-item label="用户名" prop="username">
         <el-input v-model="tempUserModel.username" :maxlength="20"/>
       </el-form-item>
-      <el-button type="primary" @click="handleClose">取消</el-button>
-      <el-button type="primary" @click="updateUserInfo" >确认</el-button>
     </el-form>
+    <el-button @click="handleClose">取消</el-button>
+    <el-button @click="updateUserInfo" >确认</el-button>
   </el-dialog>
 
 </template>

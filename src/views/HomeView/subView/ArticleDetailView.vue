@@ -13,14 +13,14 @@ import Collection from "../../../models/classes/Collection.ts";
 import {ElNotification} from "element-plus";
 import CollectionEntry from "../../../components/CollectionPreview.vue";
 import CollectionInterface from "../../../models/interfaces/CollectionInterface.ts";
-import MessageType from "../../../models/enums/MessageType.ts";
+import MessageTypeEnum from "../../../models/enums/MessageTypeEnum.ts";
 
 const router = useRouter()
 const article = Article.getInstance()
 const comments = Comments.getInstance()
 const collection = Collection.getInstance()
 const userStorage = useUserInfoStore()
-const messageType = MessageType
+const messageType = MessageTypeEnum
 let upvoteCountIncrement = 0;
 let bookmarkCountIncrement = 0;
 let articleMessageType = 0;

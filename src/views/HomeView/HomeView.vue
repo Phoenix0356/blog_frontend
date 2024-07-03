@@ -8,6 +8,7 @@ import User from "../../models/classes/User.ts";
 import {useCommonStore, useUserInfoStore} from "../../stores/counter.ts";
 import UserInfoPreview from "../../components/UserInfoPreview.vue";
 import MessageBox from "../../components/messagebox/MessageBox.vue";
+import ArticleTag from "../../components/ArticleTag.vue";
 
 const router = useRouter()
 const route = useRoute()
@@ -96,7 +97,7 @@ watchEffect( async () => {
           <el-button class="guide-button"
                      v-if="!userStorage.user"
                      type="primary"
-                     @click="goToLogin">登录</el-button>
+                     @click="goToLogin">登录账号</el-button>
 
           <el-button class="guide-button"
                      v-if="userStorage.user&&userStorage.user.roleLevel>=2"
