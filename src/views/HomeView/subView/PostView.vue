@@ -6,6 +6,8 @@ import Tag from "../../../models/classes/Tag.ts";
 import ArticleTag from "../../../components/ArticleTag.vue";
 import TagInterface from "../../../models/interfaces/TagInterface.ts";
 
+
+let isTagUpdated = false
 const router = useRouter()
 const route = useRoute()
 const articleId = ref<string>(<string>route.query.articleId)
@@ -47,7 +49,9 @@ const clickAddTag = async () => {
 const clickUpdateArticle = async () => {
   await article.updateArticleContent(articleId.value,articleForm.title,
       articleForm.content,()=> router.push(`/article/${articleId.value}`))
-  await tag.updateTagToArticle(clickedTags.value)
+  if (isTagUpdated) {
+    await tag.updateTagToArticle(clickedTags.value)
+  }
 }
 
 const clickUpdateTag = async () => {
@@ -68,11 +72,12 @@ const clickUpdateTag = async () => {
 }
 
 const clickTag = (tagId:string) => {
-    if (tagClickedMap.value.get(tagId)){
-      tagClickedMap.value.set(tagId, false)
-    }else {
-      tagClickedMap.value.set(tagId, true)
-    }
+  isTagUpdated = true
+  if (tagClickedMap.value.get(tagId)){
+    tagClickedMap.value.set(tagId, false)
+  }else {
+    tagClickedMap.value.set(tagId, true)
+  }
 }
 
 const clickConfirmTag = async() => {

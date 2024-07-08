@@ -8,7 +8,6 @@ import User from "../../models/classes/User.ts";
 import {useCommonStore, useUserInfoStore} from "../../stores/counter.ts";
 import UserInfoPreview from "../../components/UserInfoPreview.vue";
 import MessageBox from "../../components/messagebox/MessageBox.vue";
-import ArticleTag from "../../components/ArticleTag.vue";
 
 const router = useRouter()
 const route = useRoute()
