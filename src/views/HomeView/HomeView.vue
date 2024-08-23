@@ -8,6 +8,7 @@ import User from "../../models/classes/User.ts";
 import {useCommonStore, useUserInfoStore} from "../../stores/counter.ts";
 import UserInfoPreview from "../../components/UserInfoPreview.vue";
 import MessageBox from "../../components/messagebox/MessageBox.vue";
+import FileUploadPanel from "../../components/FileUploadPanel.vue";
 
 const router = useRouter()
 const route = useRoute()
@@ -20,7 +21,7 @@ const article:Article = Article.getInstance()
 // const userModel = ref<UserInterface>()
 const allArticleList = ref<ArticleInterface[]>([]);
 const buttonClicked = ref(0);
-
+const uploadDialogVisible = ref(false)
 //菜单栏router
 const userCollection = "/user/collection"
 const userBlog = "/article/userList"
@@ -36,6 +37,10 @@ const goToPost = () => {
 
 const goToTag = () => {
   router.push("/tag")
+}
+
+const showUploadPanel = () => {
+  uploadDialogVisible.value = true
 }
 
 const logout = async ()=>{
@@ -109,9 +114,15 @@ watchEffect( async () => {
                      @click="goToTag">管理标签</el-button>
 
           <el-button class="guide-button"
+                     v-if="userStorage.user&&userStorage.user.roleLevel>=3"
+                     type="primary"
+                     @click="showUploadPanel">上传文件</el-button>
+
+          <el-button class="guide-button"
                      v-if="userStorage.user"
                      type="primary"
                      @click="logout">登出账号</el-button>
+
         </div>
         <div class="mailbox-container flex-row">
           <MessageBox v-if="userStorage.user&&userStorage.user.roleLevel>=1"/>
@@ -145,6 +156,9 @@ watchEffect( async () => {
 
     </el-container>
   </el-container>
+  <!--文件上传面板-->
+  <FileUploadPanel v-model="uploadDialogVisible"/>
+
 </template>
 
 <style scoped>

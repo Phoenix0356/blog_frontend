@@ -1,6 +1,6 @@
 <script setup lang="ts">
 import {onMounted, reactive, ref} from "vue";
-import {useRoute,useRouter} from "vue-router";
+import {useRoute, useRouter} from "vue-router";
 import Article from "../../../models/classes/Article.ts";
 import Tag from "../../../models/classes/Tag.ts";
 import ArticleTag from "../../../components/ArticleTag.vue";
@@ -48,10 +48,12 @@ const clickAddTag = async () => {
 
 const clickUpdateArticle = async () => {
   await article.updateArticleContent(articleId.value,articleForm.title,
-      articleForm.content,()=> router.push(`/article/${articleId.value}`))
+      articleForm.content)
   if (isTagUpdated) {
     await tag.updateTagToArticle(clickedTags.value)
+    isTagUpdated = false
   }
+  await router.push(`/article/${articleId.value}`)
 }
 
 const clickUpdateTag = async () => {
@@ -101,6 +103,13 @@ onMounted(async () => {
     articleForm.content = articleModel.articleContent
   }
 })
+
+// onBeforeRouteLeave((to,from,next)=>{
+//   if (to.path !== '/article/post' && (isTagUpdated)){
+//     alert("请点击确认修改，否则将丢失修改内容")
+//     next(false)
+//   }
+// })
 </script>
 
 <template>

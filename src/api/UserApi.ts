@@ -22,7 +22,7 @@ export const userRegister = (data:any) =>
 
 export const userGet = () =>
     request({
-        'url':'/user/get',
+        'url':'/user/get/cur',
         'method':'get',
     })
 

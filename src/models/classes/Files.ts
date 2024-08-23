@@ -1,29 +1,29 @@
-import UserInterface from "../interfaces/UserInterface.ts";
-import {userGet} from "../../api/UserApi.ts";
+import {fileUpload} from "../../api/FileApi.ts";
 
 
-class File{
-    private static instance: File;
+class Files {
+    private static instance: Files;
 
     private constructor() {}
-    public static getInstance():File {
+    public static getInstance():Files {
         if (!this.instance){
-            this.instance = new File();
+            this.instance = new Files();
         }
         return this.instance;
     }
 
-    public async uploadFile ():Promise<void> {
-        return userGet()
+    public async uploadFile (data:any)  {
+        return fileUpload(data)
             .then((resp)=>{
-                if (resp.data.result == 1) {
-                    return resp.data.object
-                }else {
+                if (resp.data.result === 1) {
+                    return true
+                }else{
                     alert(resp.data.msg)
+                    return false
                 }
             })
     }
 
 
 }
-export default File
+export default Files

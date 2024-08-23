@@ -85,7 +85,7 @@ const beforeAvatarUpload: UploadProps['beforeUpload'] = (rawFile) => {
                ref="userRef">
           <el-upload
               id="avatar"
-              action="http://localhost/user/avatar"
+              action="#"
               class="avatar-uploader"
               :key="imageUrl"
               :show-file-list="false"

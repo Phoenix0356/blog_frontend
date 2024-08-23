@@ -75,14 +75,13 @@ class Article{
     }
 
     public async updateArticleContent(articleId:string, articleTitle: string,
-                                articleContent: string, strategy: Strategy){
+                                articleContent: string){
         await articleContentUpdate({
             articleId: articleId,
             articleTitle:articleTitle,
             articleContent:articleContent
         }).then(resp => {
             if (resp.data.result == 1){
-               strategy()
             }else {
                 alert(resp.data.msg)
             }
