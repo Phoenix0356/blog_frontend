@@ -1,4 +1,4 @@
-import {userGet, userLogin, userLogout, userRegister, userUpdate} from "../../api/UserApi.ts";
+import {userGet, userGetById, userLogin, userLogout, userRegister, userUpdate} from "../../api/UserApi.ts";
 import UserInterface from "../interfaces/UserInterface.ts";
 import userInterface from "../interfaces/UserInterface.ts";
 
@@ -11,6 +11,17 @@ class User{
             this.instance = new User();
         }
         return this.instance;
+    }
+
+    public async getUserById (userId:string):Promise<UserInterface> {
+        return userGetById(userId)
+            .then((resp)=>{
+                if (resp.data.result == 1) {
+                    return resp.data.object
+                }else {
+                    alert(resp.data.msg)
+                }
+            })
     }
 
     public async getUser ():Promise<UserInterface> {

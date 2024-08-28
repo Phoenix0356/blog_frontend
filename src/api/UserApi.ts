@@ -20,6 +20,12 @@ export const userRegister = (data:any) =>
         'data':data
     })
 
+export const userGetById = (userId:string) =>
+    request({
+        'url':`/user/visitor/${userId}`,
+        'method':'get',
+    })
+
 export const userGet = () =>
     request({
         'url':'/user/get/cur',

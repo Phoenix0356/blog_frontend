@@ -6,6 +6,7 @@ interface ArticleInterface {
     articleUpvoteCount: number
     articleReadCount: number
     articleBookmarkCount: number
+    articleUserId:string
     username: string
     userAvatarURL: string
     collectionArticleNote:string

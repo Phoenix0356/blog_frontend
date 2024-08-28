@@ -2,36 +2,63 @@
 import {ElMessage, ElNotification, UploadFile, UploadProps} from "element-plus";
 import Files from "../models/classes/Files.ts";
 
-let uploadedFile:any = null
-
+let uploadedFiles:any = []
+let endPointInd:number = 0
 const files = Files.getInstance()
 
-const beforeAvatarUpload: UploadProps['beforeUpload'] = (rawFile) => {
+const beforeFileUpload: UploadProps['beforeUpload'] = (rawFile) => {
   if (rawFile.type !== ('csv'||'xlsx'||'txt')) {
     ElMessage.error('请上传目标格式文件!')
     return false
   }
   return true
 }
-const avatarSelected = async (uploadFile: UploadFile) => {
-  uploadedFile = uploadFile
+
+const fileSelected = async (uploadFile: UploadFile) => {
+  const chunkSize = 1024 * 2; // 1MB
+  if (uploadFile.raw) {
+    const chunks = Math.ceil(uploadFile.raw.size / chunkSize);
+    //对文件进行分块
+    for (let i = 0; i < chunks; i++) {
+      uploadedFiles[i] = uploadFile.raw.slice(i * chunkSize, (i + 1) * chunkSize)
+    }
+  }
 }
+
 const confirmUpload = async() =>{
-  console.log(uploadedFile)
-  const formData = new FormData();
-  formData.append('file', uploadedFile.raw);
-  const isSuccess = await files.uploadFile(formData);
-  if(isSuccess){
+  let isSuccess = true
+  for (let i = 0; i < uploadedFiles.length; i++) {
+    let chunk = uploadedFiles[i]
+    endPointInd = i;
+    const formData = new FormData();
+    formData.append('file', chunk);
+    formData.append('index', endPointInd.toString())
+    formData.append('totalChunks', uploadedFiles.length);
+
+    //失败重传
+    if (!await files.uploadFile(formData)){
+      let retryCnt = 3;
+      isSuccess =false
+      while (retryCnt>0){
+        retryCnt--;
+        if (await files.uploadFile(formData)){
+          isSuccess = true;
+          break;
+        }
+      }
+    }
+  }
+  if (isSuccess) {
     ElNotification({
       title: 'Success',
-      message: `文件${uploadedFile.name}上传成功 `,
+      message: `文件上传成功 `,
       type: 'success',
       duration: 1500,
     })
-  }else {
+  } else {
     ElNotification({
       title: 'Failed',
-      message: `文件${uploadedFile.name}上传失败`,
+      message: `文件上传失败`,
       type: 'error',
       duration: 1500,
     })
@@ -45,8 +72,8 @@ const confirmUpload = async() =>{
         id="file"
         action="#"
         :show-file-list="true"
-        :on-change="avatarSelected"
-        :before-upload="beforeAvatarUpload"
+        :on-change="fileSelected"
+        :before-upload="beforeFileUpload"
         :auto-upload="false"
         :limit="1"
     >

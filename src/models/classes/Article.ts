@@ -28,16 +28,13 @@ class Article{
         })
     }
 
-    public async getUserArticleList(strategy?:Strategy|null):Promise<ArticleInterface[]>{
+    public async getUserArticleList():Promise<ArticleInterface[]>{
         return articleUserListGet()
         .then( resp => {
             if (resp.data.result == 1){
                 return  resp.data.object
             }else {
                 alert(resp.data.msg)
-                if (strategy) {
-                    strategy()
-                }
             }
         })
     }

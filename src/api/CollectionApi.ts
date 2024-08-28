@@ -8,14 +8,14 @@ export const collectionArticleListGet = (collectionId: string) =>
 
 export const collectionGet = (collectionId:string) =>
     request({
-        'url': `/collection/get/${collectionId}`,
+        'url': `/collection/${collectionId}`,
         'method': 'get',
     })
 
 
-export const collectionListGet = (username:string) =>
+export const collectionListGet = () =>
     request({
-        'url': `/collection/all/${username}`,
+        'url': `/collection/all`,
         'method': 'get',
     })
 

@@ -14,9 +14,11 @@ import {ElNotification} from "element-plus";
 import CollectionEntry from "../../../components/CollectionPreview.vue";
 import CollectionInterface from "../../../models/interfaces/CollectionInterface.ts";
 import MessageTypeEnum from "../../../models/enums/MessageTypeEnum.ts";
+import User from "../../../models/classes/User.ts";
 
 const router = useRouter()
 const article = Article.getInstance()
+const user = User.getInstance()
 const comments = Comments.getInstance()
 const collection = Collection.getInstance()
 const userStorage = useUserInfoStore()
@@ -26,6 +28,7 @@ let bookmarkCountIncrement = 0;
 let articleMessageType = 0;
 
 const articleModel = ref<ArticleInterface>({
+  articleUserId: "",
   collectionArticleNote: "",
   articleBookmarkCount: 0,
   articleContent: "",
@@ -54,10 +57,19 @@ const commentDialogVisible = ref(false)
 const collectionDialogVisible = ref(false)
 let articleId:any = null
 
+const assembleCommentModelList = async () => {
+  let commentsList = await comments.getArticleCommentList(articleId)
+  for(let commentModel of commentsList){
+    const userModel = await user.getUserById(commentModel.commentUserId)
+    commentModel.username = userModel.username
+    commentModel.userAvatarURL = userModel.userAvatarURL
+  }
+  return commentsList
+}
 
 const clickComment = async () =>{
   commentDialogVisible.value = true
-  allCommentsList.value = await comments.getArticleCommentList(articleId)
+  allCommentsList.value = await assembleCommentModelList()
 }
 const clickUpdate = () => {
   router.push({
@@ -70,7 +82,7 @@ const clickUpdate = () => {
 
 const clickPostComment = async () => {
   await comments.saveComment(commentContent.value, articleId)
-  allCommentsList.value = await comments.getArticleCommentList(articleId)
+  allCommentsList.value = await assembleCommentModelList()
   commentContent.value = ""
 }
 
@@ -92,7 +104,7 @@ const clickCollection = async () => {
   }
   collectionDialogVisible.value=true;
   if (userStorage.user) {
-    allCollectionList.value = await collection.getCollectionList(userStorage.user.username)
+    allCollectionList.value = await collection.getCollectionList()
   }
 }
 
@@ -136,10 +148,17 @@ const handleCommentClose = () => {
   commentContent.value = ""
   commentDialogVisible.value = false
 }
+const assembleArticleModel = async (articleId:string) => {
+  let preArticleModel = await article.getArticle(articleId, () => router.push("/"))
+  let userModel = await user.getUserById(preArticleModel.articleUserId)
+  preArticleModel.username = userModel.username
+  preArticleModel.userAvatarURL = userModel.userAvatarURL
+  return preArticleModel
+}
 
 onMounted(async ()=> {
   articleId = router.currentRoute.value.params.articleId
-  articleModel.value = await article.getArticle(articleId, () => router.push("/"))
+  articleModel.value = await assembleArticleModel(articleId);
 })
 
 onBeforeRouteLeave((to)=>{

@@ -22,7 +22,6 @@ const goToArticleDetail = () => {
 
 onMounted(async ()=>{
   tagArticleList.value = await tag.getArticleTagList(props.article.articleId)
-
 })
 
 </script>

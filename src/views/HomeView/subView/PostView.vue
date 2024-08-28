@@ -131,7 +131,7 @@ onMounted(async () => {
             rows="22"
             type="textarea" placeholder="请输入正文"
             v-model="articleForm.content"
-            maxlength="4000"
+            maxlength="9999"
             show-word-limit/>
       </el-form-item>
     </el-form>

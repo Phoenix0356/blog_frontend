@@ -2,14 +2,14 @@ import request from "../utils/request"
 
 export const commentGet = (commentId:string) =>
     request({
-        'url':`/comment/get/${commentId}`,
+        'url':`/comment/visitor/${commentId}`,
         'method':'get',
     })
 
 
 export const commentArticleList = (data:string) =>
     request({
-        'url':`/comment/get/all?articleId=${data}`,
+        'url':`/comment/visitor/all?articleId=${data}`,
         'method':'get',
     })
 

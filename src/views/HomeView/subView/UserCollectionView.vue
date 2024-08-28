@@ -39,7 +39,7 @@
         collectionName: createCollectionModel.value.collectionName,
         collectionDescription:createCollectionModel.value.collectionDescription
       })
-      collectionList.value = await collection.getCollectionList(userStorage.user.username)
+      collectionList.value = await collection.getCollectionList()
       collectionMapStorage.setCollectionMap(collectionList.value)
     }
     if (flag) {
@@ -49,7 +49,7 @@
 
   onMounted(async () => {
     if (userStorage.user) {
-      collectionList.value = await collection.getCollectionList(userStorage.user.username)
+      collectionList.value = await collection.getCollectionList()
       collectionMapStorage.setCollectionMap(collectionList.value)
     }else {
       alert("Please login")

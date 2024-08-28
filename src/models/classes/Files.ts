@@ -15,12 +15,7 @@ class Files {
     public async uploadFile (data:any)  {
         return fileUpload(data)
             .then((resp)=>{
-                if (resp.data.result === 1) {
-                    return true
-                }else{
-                    alert(resp.data.msg)
-                    return false
-                }
+                return resp.data.result === 1;
             })
     }
 

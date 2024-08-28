@@ -41,8 +41,8 @@ class Collection{
         })
     }
 
-    public async getCollectionList(username:string){
-        return collectionListGet(username)
+    public async getCollectionList(){
+        return collectionListGet()
         .then(resp => {
             if (resp.data.result === 1){
                 return resp.data.object

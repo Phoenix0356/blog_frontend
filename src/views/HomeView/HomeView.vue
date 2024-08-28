@@ -50,12 +50,23 @@ const logout = async ()=>{
   })
 }
 
+//通过user和article对象来组装出视图需要的对象
+const assembleArticleList = async (sortStrategy:number) => {
+  const articleList = [] = await article.getAllArticleList(sortStrategy)
+  const userPromises = articleList.map(async (articleModel) => {
+    const userModel = await user.getUserById(articleModel.articleUserId);
+    articleModel.username = userModel.username;
+    articleModel.userAvatarURL = userModel.userAvatarURL;
+  });
+  await Promise.all(userPromises);
+  return articleList
+}
+
 const clickSort = async (sortStrategy:number) => {
   commonStorage.setSortStrategy(sortStrategy)
   buttonClicked.value = sortStrategy
-  allArticleList.value = await article.getAllArticleList(sortStrategy)
+  allArticleList.value = await assembleArticleList(sortStrategy)
 }
-
 
 watchEffect( async () => {
   if (route.path === '/') {

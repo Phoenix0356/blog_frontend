@@ -3,7 +3,7 @@ interface CommentInterface{
     commentContent:string
     commentReviseTime:string
     commentUpvoteCount:number
-
+    commentUserId:string
     username:string
     userAvatarURL:string
 }
