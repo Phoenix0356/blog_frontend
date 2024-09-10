@@ -1,7 +1,7 @@
 <script setup lang="ts">
 import {onBeforeRouteLeave, useRouter} from "vue-router";
 import {onMounted, ref} from "vue";
-import {activatedMessageType} from "../../../utils/DataUtil.ts";
+import {isUpvote, modifyMutualMessageType} from "../../../utils/MessageTypeUtil.ts";
 import ArticleInterface from "../../../models/interfaces/ArticleInterface.ts";
 import CountIndicator from "../../../components/CountIndicator.vue";
 import Article from "../../../models/classes/Article.ts";
@@ -13,8 +13,8 @@ import Collection from "../../../models/classes/Collection.ts";
 import {ElNotification} from "element-plus";
 import CollectionEntry from "../../../components/CollectionPreview.vue";
 import CollectionInterface from "../../../models/interfaces/CollectionInterface.ts";
-import MessageTypeEnum from "../../../models/enums/MessageTypeEnum.ts";
 import User from "../../../models/classes/User.ts";
+import messageTypeEnum from "../../../models/enums/MessageTypeEnum.ts";
 
 const router = useRouter()
 const article = Article.getInstance()
@@ -22,9 +22,8 @@ const user = User.getInstance()
 const comments = Comments.getInstance()
 const collection = Collection.getInstance()
 const userStorage = useUserInfoStore()
-const messageType = MessageTypeEnum
-let upvoteCountIncrement = 0;
-let bookmarkCountIncrement = 0;
+// let upvoteCountIncrement = 0;
+// let bookmarkCountIncrement = 0;
 let articleMessageType = 0;
 
 const articleModel = ref<ArticleInterface>({
@@ -37,6 +36,7 @@ const articleModel = ref<ArticleInterface>({
   articleReviseTime: "",
   articleTitle: "",
   articleUpvoteCount: 0,
+  articleDateState : 0,
   userAvatarURL: "",
   username: ""
 })
@@ -91,9 +91,15 @@ const clickUpvote = () => {
     alert("请先登录")
     return
   }
-  articleModel.value.articleUpvoteCount++
-  upvoteCountIncrement++;
-  articleMessageType = activatedMessageType(articleMessageType,messageType.UPVOTE.value)
+  // upvoteCountIncrement++;
+  articleMessageType = modifyMutualMessageType(articleMessageType,
+      messageTypeEnum.UPVOTE.value,
+      messageTypeEnum.UPVOTE_CANCEL.value)
+  if(isUpvote(articleMessageType)){
+    articleModel.value.articleUpvoteCount++
+  }else{
+    articleModel.value.articleUpvoteCount--;
+  }
 }
 
 
@@ -117,11 +123,14 @@ const clickAddToCollection = async (collectionName:string) => {
       collectionName:collectionName
     })
   }
-  if (addArticleFlag) {
 
+  if (addArticleFlag) {
     articleModel.value.articleBookmarkCount++
-    articleMessageType = activatedMessageType(articleMessageType,messageType.BOOKMARK.value)
-    bookmarkCountIncrement++
+    articleMessageType = modifyMutualMessageType(articleMessageType,
+        messageTypeEnum.BOOKMARK.value,
+        messageTypeEnum.BOOKMARK_CANCEL.value
+    )
+    // bookmarkCountIncrement++
 
     collectionDialogVisible.value = false
     ElNotification({
@@ -140,8 +149,7 @@ const clickAddToCollection = async (collectionName:string) => {
   }
 }
 const updateArticle = () => {
- article.updateArticleStatic(articleId,articleModel.value.articleReadCount,
-     upvoteCountIncrement,bookmarkCountIncrement,articleMessageType)
+ article.updateArticleData(articleId,articleModel.value.articleReadCount,articleMessageType)
 }
 
 const handleCommentClose = () => {
@@ -149,7 +157,7 @@ const handleCommentClose = () => {
   commentDialogVisible.value = false
 }
 const assembleArticleModel = async (articleId:string) => {
-  let preArticleModel = await article.getArticle(articleId, () => router.push("/"))
+  let preArticleModel = await article.getArticle(articleId)
   let userModel = await user.getUserById(preArticleModel.articleUserId)
   preArticleModel.username = userModel.username
   preArticleModel.userAvatarURL = userModel.userAvatarURL
@@ -162,7 +170,7 @@ onMounted(async ()=> {
 })
 
 onBeforeRouteLeave((to)=>{
-  if (to.path !== `/article/${articleId}` && (upvoteCountIncrement>0 || bookmarkCountIncrement>0)){
+  if (to.path !== `/article/${articleId}` && (articleMessageType > 0)){
     updateArticle()
   }
 })

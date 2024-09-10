@@ -2,7 +2,7 @@
 import {onMounted, ref} from "vue";
 import router from "../../../router";
 import {useUserInfoStore} from "../../../stores/counter.ts";
-import {getUserRole} from "../../../utils/DataUtil.ts";
+import {getUserRole} from "../../../utils/CommonUtil.ts";
 import User from "../../../models/classes/User.ts";
 import UserInterface from "../../../models/interfaces/UserInterface.ts";
 

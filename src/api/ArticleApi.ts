@@ -25,7 +25,7 @@ export const articleSave = (data:any) =>
         'data':data
     })
 
-export const articleStaticUpdate = (data:any) =>
+export const articleDataUpdate = (data:any) =>
     request({
         'url':'/article/update/data',
         'method':'put',

@@ -2,7 +2,7 @@ import {
     articleAllGet,
     articleContentUpdate, articleDelete,
     articleGet, articleSave,
-    articleStaticUpdate,
+    articleDataUpdate,
     articleUserListGet
 } from "../../api/ArticleApi.ts";
 import ArticleInterface from "../interfaces/ArticleInterface.ts";
@@ -20,7 +20,7 @@ class Article{
     public async getAllArticleList(sortBy:number):Promise<ArticleInterface[]> {
         return articleAllGet(sortBy)
         .then(resp =>{
-            if (resp.data.result == 1) {
+            if (resp.data.result === 1) {
                 return resp.data.object
             }else {
                 alert(resp.data.msg)
@@ -31,41 +31,33 @@ class Article{
     public async getUserArticleList():Promise<ArticleInterface[]>{
         return articleUserListGet()
         .then( resp => {
-            if (resp.data.result == 1){
-                return  resp.data.object
-            }else {
-                alert(resp.data.msg)
-            }
-        })
-    }
-
-    public async getArticle(articleId:any,strategy?:Strategy|null):Promise<ArticleInterface>{
-        return articleGet(articleId)
-        .then(resp => {
-            if (resp.data.result == 1){
+            if (resp.data.result === 1){
                 return resp.data.object
             }else {
                 alert(resp.data.msg)
-                if (strategy) {
-                    strategy()
-                }
             }
         })
     }
 
-    public async updateArticleStatic(articleId:string,articleReadCount:number,
-                               articleUpvoteCount:number,articleBookmarkCount:number,
-                                     articleMessageType:number){
-        await articleStaticUpdate({
+    public async getArticle(articleId:any):Promise<ArticleInterface>{
+        return articleGet(articleId)
+        .then(resp => {
+            if (resp.data.result === 1){
+                return resp.data.object
+            }else {
+                alert(resp.data.msg)
+            }
+        })
+    }
+
+    public async updateArticleData(articleId:string, articleReadCount:number,
+                                   articleMessageType:number){
+        await articleDataUpdate({
             articleId: articleId,
             articleReadCount:articleReadCount,
-            articleUpvoteCountChange: articleUpvoteCount,
-            articleBookmarkCountChange: articleBookmarkCount,
             articleMessageType:articleMessageType
         }).then(resp => {
-            if (resp.data.result == 1){
-                //Todo
-            }else {
+            if (resp.data.result !== 1){
                 alert(resp.data.msg)
             }
         })
@@ -78,7 +70,7 @@ class Article{
             articleTitle:articleTitle,
             articleContent:articleContent
         }).then(resp => {
-            if (resp.data.result == 1){
+            if (resp.data.result === 1){
             }else {
                 alert(resp.data.msg)
             }
@@ -90,7 +82,7 @@ class Article{
             articleTitle:articleForm.title,
             articleContent:articleForm.content
         }).then(resp =>{
-            if (resp.data.result == 1){
+            if (resp.data.result === 1){
                 strategy()
                 return resp.data.object
             }else {
