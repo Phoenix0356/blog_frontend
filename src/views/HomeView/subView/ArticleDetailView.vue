@@ -22,8 +22,6 @@ const user = User.getInstance()
 const comments = Comments.getInstance()
 const collection = Collection.getInstance()
 const userStorage = useUserInfoStore()
-// let upvoteCountIncrement = 0;
-// let bookmarkCountIncrement = 0;
 let articleMessageType = 0;
 
 const articleModel = ref<ArticleInterface>({
@@ -36,7 +34,7 @@ const articleModel = ref<ArticleInterface>({
   articleReviseTime: "",
   articleTitle: "",
   articleUpvoteCount: 0,
-  articleDateState : 0,
+  articleDataState : 0,
   userAvatarURL: "",
   username: ""
 })
@@ -95,6 +93,7 @@ const clickUpvote = () => {
   articleMessageType = modifyMutualMessageType(articleMessageType,
       messageTypeEnum.UPVOTE.value,
       messageTypeEnum.UPVOTE_CANCEL.value)
+  console.log(articleMessageType)
   if(isUpvote(articleMessageType)){
     articleModel.value.articleUpvoteCount++
   }else{
@@ -130,7 +129,6 @@ const clickAddToCollection = async (collectionName:string) => {
         messageTypeEnum.BOOKMARK.value,
         messageTypeEnum.BOOKMARK_CANCEL.value
     )
-    // bookmarkCountIncrement++
 
     collectionDialogVisible.value = false
     ElNotification({
@@ -167,10 +165,11 @@ const assembleArticleModel = async (articleId:string) => {
 onMounted(async ()=> {
   articleId = router.currentRoute.value.params.articleId
   articleModel.value = await assembleArticleModel(articleId);
+  articleMessageType = articleModel.value.articleDataState
 })
 
 onBeforeRouteLeave((to)=>{
-  if (to.path !== `/article/${articleId}` && (articleMessageType > 0)){
+  if (to.path !== `/article/${articleId}` && (articleMessageType !== messageTypeEnum.NO_OPERATION.value)){
     updateArticle()
   }
 })

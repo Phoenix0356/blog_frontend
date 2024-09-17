@@ -1,7 +1,7 @@
 import MessageTypeEnum from "../models/enums/MessageTypeEnum.ts";
 
 export const modifyMutualMessageType = (articleMessageType:number,type1:number,type2:number):number => {
-    //使用异或操作来翻转一对互斥事件的消息
+    //使用异或操作来翻转一对互斥事件的消息类型
     return articleMessageType ^ type1 ^ type2
 }
 
