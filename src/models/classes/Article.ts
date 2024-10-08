@@ -51,11 +51,11 @@ class Article{
     }
 
     public async updateArticleData(articleId:string, articleReadCount:number,
-                                   articleMessageType:number){
+                                   articleDataChangedState:number){
         await articleDataUpdate({
             articleId: articleId,
             articleReadCount:articleReadCount,
-            articleMessageType:articleMessageType
+            articleDataChangedState:articleDataChangedState
         }).then(resp => {
             if (resp.data.result !== 1){
                 alert(resp.data.msg)

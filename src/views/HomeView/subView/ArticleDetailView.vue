@@ -1,7 +1,6 @@
 <script setup lang="ts">
 import {onBeforeRouteLeave, useRouter} from "vue-router";
 import {onMounted, ref} from "vue";
-import {isUpvote, modifyMutualMessageType} from "../../../utils/MessageTypeUtil.ts";
 import ArticleInterface from "../../../models/interfaces/ArticleInterface.ts";
 import CountIndicator from "../../../components/CountIndicator.vue";
 import Article from "../../../models/classes/Article.ts";
@@ -15,6 +14,7 @@ import CollectionEntry from "../../../components/CollectionPreview.vue";
 import CollectionInterface from "../../../models/interfaces/CollectionInterface.ts";
 import User from "../../../models/classes/User.ts";
 import messageTypeEnum from "../../../models/enums/MessageTypeEnum.ts";
+import MessageTypeEnum from "../../../models/enums/MessageTypeEnum.ts";
 
 const router = useRouter()
 const article = Article.getInstance()
@@ -22,7 +22,7 @@ const user = User.getInstance()
 const comments = Comments.getInstance()
 const collection = Collection.getInstance()
 const userStorage = useUserInfoStore()
-let articleMessageType = 0;
+const articleDataState = ref<number>(MessageTypeEnum.NO_OPERATION.value);
 
 const articleModel = ref<ArticleInterface>({
   articleUserId: "",
@@ -89,15 +89,14 @@ const clickUpvote = () => {
     alert("请先登录")
     return
   }
-  // upvoteCountIncrement++;
-  articleMessageType = modifyMutualMessageType(articleMessageType,
-      messageTypeEnum.UPVOTE.value,
-      messageTypeEnum.UPVOTE_CANCEL.value)
-  console.log(articleMessageType)
-  if(isUpvote(articleMessageType)){
-    articleModel.value.articleUpvoteCount++
+
+  if((articleDataState.value&MessageTypeEnum.UPVOTE.value) >0){
+    //如果当前已经点赞，则取消点赞
+    articleModel.value.articleUpvoteCount--
+    articleDataState.value = articleDataState.value^MessageTypeEnum.UPVOTE.value
   }else{
-    articleModel.value.articleUpvoteCount--;
+    articleModel.value.articleUpvoteCount++
+    articleDataState.value = articleDataState.value^MessageTypeEnum.UPVOTE.value
   }
 }
 
@@ -125,11 +124,7 @@ const clickAddToCollection = async (collectionName:string) => {
 
   if (addArticleFlag) {
     articleModel.value.articleBookmarkCount++
-    articleMessageType = modifyMutualMessageType(articleMessageType,
-        messageTypeEnum.BOOKMARK.value,
-        messageTypeEnum.BOOKMARK_CANCEL.value
-    )
-
+    articleDataState.value = articleDataState.value|MessageTypeEnum.BOOKMARK.value
     collectionDialogVisible.value = false
     ElNotification({
       title: 'Success',
@@ -147,7 +142,7 @@ const clickAddToCollection = async (collectionName:string) => {
   }
 }
 const updateArticle = () => {
- article.updateArticleData(articleId,articleModel.value.articleReadCount,articleMessageType)
+ article.updateArticleData(articleId,articleModel.value.articleReadCount,articleDataState.value)
 }
 
 const handleCommentClose = () => {
@@ -165,11 +160,11 @@ const assembleArticleModel = async (articleId:string) => {
 onMounted(async ()=> {
   articleId = router.currentRoute.value.params.articleId
   articleModel.value = await assembleArticleModel(articleId);
-  articleMessageType = articleModel.value.articleDataState
+  articleDataState.value = articleModel.value.articleDataState
 })
 
 onBeforeRouteLeave((to)=>{
-  if (to.path !== `/article/${articleId}` && (articleMessageType !== messageTypeEnum.NO_OPERATION.value)){
+  if (to.path !== `/article/${articleId}`){
     updateArticle()
   }
 })
