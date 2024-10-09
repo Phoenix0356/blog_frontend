@@ -2,8 +2,8 @@ import {
     articleAllGet,
     articleContentUpdate, articleDelete,
     articleGet, articleSave,
-    articleDataUpdate,
-    articleUserListGet
+    articleAuthorizedDataUpdate,
+    articleUserListGet, articleDataStateGet, articleCommonDataUpdate
 } from "../../api/ArticleApi.ts";
 import ArticleInterface from "../interfaces/ArticleInterface.ts";
 class Article{
@@ -50,13 +50,30 @@ class Article{
         })
     }
 
-    public async updateArticleData(articleId:string, articleReadCount:number,
-                                   articleDataChangedState:number){
-        await articleDataUpdate({
+    public async getArticleDataState(articleId:any):Promise<ArticleInterface>{
+        return articleDataStateGet(articleId)
+            .then(resp => {
+                if (resp.data.result === 1){
+                    return resp.data.object
+                }else {
+                    alert(resp.data.msg)
+                }
+            })
+    }
+
+    public async updateArticleAuthorizedData(articleId:string, articleDataChangedState:number){
+        await articleAuthorizedDataUpdate({
             articleId: articleId,
-            articleReadCount:articleReadCount,
-            articleDataChangedState:articleDataChangedState
+            articleDataChangedState: articleDataChangedState
         }).then(resp => {
+            if (resp.data.result !== 1){
+                alert(resp.data.msg)
+            }
+        })
+    }
+
+    public async updateArticleCommonData(articleId:string){
+        await articleCommonDataUpdate(articleId).then(resp => {
             if (resp.data.result !== 1){
                 alert(resp.data.msg)
             }
@@ -70,8 +87,7 @@ class Article{
             articleTitle:articleTitle,
             articleContent:articleContent
         }).then(resp => {
-            if (resp.data.result === 1){
-            }else {
+            if (resp.data.result !== 1){
                 alert(resp.data.msg)
             }
         })

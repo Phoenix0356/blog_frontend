@@ -18,6 +18,13 @@ export const articleUserListGet = () =>
         'url':'/article/list',
         'method':'get'
     })
+
+export const articleDataStateGet = (articleId:any) =>
+    request({
+        'url': `/article/data/${articleId}`,
+        'method': 'get'
+    })
+
 export const articleSave = (data:any) =>
     request({
         'url':'/article/save',
@@ -25,11 +32,16 @@ export const articleSave = (data:any) =>
         'data':data
     })
 
-export const articleDataUpdate = (data:any) =>
+export const articleAuthorizedDataUpdate = (data:any) =>
     request({
         'url':'/article/update/data',
         'method':'put',
         'data':data
+    })
+export const articleCommonDataUpdate = (articleId:string) =>
+    request({
+        'url': `/article/visitor/update/${articleId}`,
+        'method': 'put'
     })
 
 export const articleContentUpdate = (data:any) =>

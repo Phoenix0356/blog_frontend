@@ -13,7 +13,6 @@ import {ElNotification} from "element-plus";
 import CollectionEntry from "../../../components/CollectionPreview.vue";
 import CollectionInterface from "../../../models/interfaces/CollectionInterface.ts";
 import User from "../../../models/classes/User.ts";
-import messageTypeEnum from "../../../models/enums/MessageTypeEnum.ts";
 import MessageTypeEnum from "../../../models/enums/MessageTypeEnum.ts";
 
 const router = useRouter()
@@ -34,7 +33,6 @@ const articleModel = ref<ArticleInterface>({
   articleReviseTime: "",
   articleTitle: "",
   articleUpvoteCount: 0,
-  articleDataState : 0,
   userAvatarURL: "",
   username: ""
 })
@@ -142,7 +140,11 @@ const clickAddToCollection = async (collectionName:string) => {
   }
 }
 const updateArticle = () => {
- article.updateArticleData(articleId,articleModel.value.articleReadCount,articleDataState.value)
+  //如果用户登录，就更新需要验证才能修改的数据
+  if (userStorage.user) {
+    article.updateArticleAuthorizedData(articleId,articleDataState.value)
+  }
+  article.updateArticleCommonData(articleId)
 }
 
 const handleCommentClose = () => {
@@ -160,7 +162,10 @@ const assembleArticleModel = async (articleId:string) => {
 onMounted(async ()=> {
   articleId = router.currentRoute.value.params.articleId
   articleModel.value = await assembleArticleModel(articleId);
-  articleDataState.value = articleModel.value.articleDataState
+  if(userStorage.user) {
+    articleDataState.value = (await article.getArticleDataState(articleId)).articleDataState;
+    console.log(articleDataState.value)
+  }
 })
 
 onBeforeRouteLeave((to)=>{
