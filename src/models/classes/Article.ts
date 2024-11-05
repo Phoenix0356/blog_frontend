@@ -50,11 +50,11 @@ class Article{
         })
     }
 
-    public async getArticleDataState(articleId:any):Promise<ArticleInterface>{
+    public async getArticleDataState(articleId:any):Promise<number>{
         return articleDataStateGet(articleId)
             .then(resp => {
                 if (resp.data.result === 1){
-                    return resp.data.object
+                    return resp.data.object.articleDataState
                 }else {
                     alert(resp.data.msg)
                 }

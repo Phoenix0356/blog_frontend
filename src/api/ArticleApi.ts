@@ -2,14 +2,14 @@ import request from "../utils/request";
 
 export const articleGet = (articleId:any) =>
     request({
-        'url': `/article/visitor/${articleId}`,
+        'url': `/article/${articleId}`,
         'method': 'get'
     })
 
 
 export const articleAllGet = (sortBy:number) =>
     request({
-        'url':`/article/visitor/all?sortBy=${sortBy}`,
+        'url':`/article/all?sortBy=${sortBy}`,
         'method':'get'
     })
 
@@ -40,7 +40,7 @@ export const articleAuthorizedDataUpdate = (data:any) =>
     })
 export const articleCommonDataUpdate = (articleId:string) =>
     request({
-        'url': `/article/visitor/update/${articleId}`,
+        'url': `/article/update/${articleId}`,
         'method': 'put'
     })
 

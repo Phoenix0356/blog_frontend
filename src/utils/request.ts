@@ -7,12 +7,14 @@ const request = axios.create({
 })
 
 request.interceptors.request.use((config) => {
-    config.headers['authorization'] = localStorage.getItem('token');
     return config;
 })
 
 request.interceptors.response.use(
     async (resp) => {
+        if (resp.status !== 200) {
+            alert("功能施工中，敬请期待")
+        }
         if(resp.data.result === 2){
             console.log(resp.data.msg)
             localStorage.clear()

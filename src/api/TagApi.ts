@@ -8,7 +8,7 @@ export const tagListGet = () =>
 
 export const tagArticleGet = (articleId:string) =>
     request({
-        'url':`/tag/visitor/${articleId}`,
+        'url':`/tag/${articleId}`,
         'method':'get',
     })
 

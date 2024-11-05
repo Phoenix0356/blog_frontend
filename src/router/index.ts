@@ -63,6 +63,11 @@ const router = createRouter({
             name: 'register',
             component: () => import("../views/RegisterView.vue")
         },
+        {
+            path: '/error',
+            name: 'error',
+            component: () => import("../views/ErrorPageView.vue")
+        },
     ]
 })
 

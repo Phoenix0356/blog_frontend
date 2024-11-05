@@ -5,6 +5,7 @@ import {ElMessage, UploadFile, UploadProps} from "element-plus";
 import UserInterface from "../models/interfaces/UserInterface.ts";
 import User from "../models/classes/User.ts";
 import {useUserInfoStore} from "../stores/counter.ts";
+import {hashPassword} from "../utils/CommonUtil.ts";
 
 const userStorage = useUserInfoStore()
 const userRef = ref()
@@ -12,7 +13,6 @@ const router = useRouter()
 const userModel = reactive<UserInterface>({
   roleLevel: 0,
   userAvatarURL: "",
-  token:"",
   password: "",
   username: ""
 })
@@ -41,9 +41,9 @@ const register = async () => {
   }
   try {
     await userRef.value.validate();
-    const regUser:UserInterface = await user.register(userModel.username,userModel.password,
+    let cryptPassword = await hashPassword(userModel.password)
+    const regUser:UserInterface = await user.register(userModel.username,cryptPassword,
         avatarBase64,()=>router.push("/"))
-    localStorage.setItem('token', 'Bearer ' + regUser.token)
     userStorage.setUser( await user.getUser())
   } catch (error) {
     console.log(error);

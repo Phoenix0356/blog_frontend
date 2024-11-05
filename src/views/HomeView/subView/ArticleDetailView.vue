@@ -163,8 +163,8 @@ onMounted(async ()=> {
   articleId = router.currentRoute.value.params.articleId
   articleModel.value = await assembleArticleModel(articleId);
   if(userStorage.user) {
-    articleDataState.value = (await article.getArticleDataState(articleId)).articleDataState;
-    console.log(articleDataState.value)
+    articleDataState.value = await article.getArticleDataState(articleId);
+    //console.log(articleDataState.value)
   }
 })
 
@@ -186,15 +186,18 @@ onBeforeRouteLeave((to)=>{
 
         <CountIndicator
             class="upvote-count position-abs"
-            v-model="articleModel.articleUpvoteCount"
+            :cur-value="articleModel.articleUpvoteCount"
+            :message="(articleDataState&MessageTypeEnum.UPVOTE.value)>0?'已点赞':'未点赞'"
         >
           <template #icon>
             <el-icon size="20" @click="clickUpvote"><Medal /></el-icon>
           </template>
         </CountIndicator>
 
-        <CountIndicator class="bookmark-count position-abs"
-                        v-model="articleModel.articleBookmarkCount"
+        <CountIndicator
+            class="bookmark-count position-abs"
+            :cur-value="articleModel.articleBookmarkCount"
+            :message="(articleDataState&MessageTypeEnum.BOOKMARK.value)>0?'已收藏':'未收藏'"
         >
           <template #icon>
            <el-icon size="20" @click="clickCollection"><Star /></el-icon>

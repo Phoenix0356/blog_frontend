@@ -4,6 +4,7 @@ import {useRouter} from "vue-router";
 import UserInterface from "../models/interfaces/UserInterface.ts";
 import User from "../models/classes/User.ts";
 import {useUserInfoStore} from "../stores/counter.ts";
+import {hashPassword} from "../utils/CommonUtil.ts";
 
 const userStorage = useUserInfoStore()
 const router = useRouter()
@@ -13,7 +14,6 @@ const userRef = ref()
 const userModel = ref<UserInterface>({
   roleLevel: 0,
   userAvatarURL: "",
-  token:"",
   password: "",
   username: ""
 })
@@ -35,10 +35,10 @@ const goToRegister = () => {
 }
 const login = async () => {
     await userRef.value.validate();
-    const loginUser:UserInterface = await user.login(userModel.value.username,userModel.value.password,
+    let cryptPassword = await hashPassword(userModel.value.password)
+    const loginUser:UserInterface = await user.login(userModel.value.username,cryptPassword,
         ()=>{router.push('/')})
-    if(loginUser.token){
-      localStorage.setItem('token', 'Bearer ' + loginUser.token)
+    if(loginUser.username){
       userStorage.setUser( await user.getUser())
     }
 }

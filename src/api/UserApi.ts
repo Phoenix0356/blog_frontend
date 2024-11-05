@@ -2,7 +2,7 @@ import request from "../utils/request"
 
 export const userLogin = (data:any) =>
    request({
-        'url':'/user/visitor/login',
+        'url':'/user/login',
         'method':'post',
         'data':data
    })
@@ -15,14 +15,14 @@ export const userLogout = () =>
 
 export const userRegister = (data:any) =>
     request({
-        'url':'/user/visitor/register',
+        'url':'/user/register',
         'method':'post',
         'data':data
     })
 
 export const userGetById = (userId:string) =>
     request({
-        'url':`/user/visitor/${userId}`,
+        'url':`/user/${userId}`,
         'method':'get',
     })
 
