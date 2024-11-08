@@ -1,13 +1,4 @@
 <script setup lang="ts">
-// const curValue = defineModel({
-//   type: Number,
-//   required: true,
-// })
-//
-// const isClicked = defineModel({
-//   type: Number,
-//   required: true,
-// })
 const props = defineProps({
   curValue: {
     type: Number,
@@ -26,11 +17,11 @@ const props = defineProps({
     <div class="icon-val">
       <slot name="icon"/>
       <el-text class="value">
-        {{curValue<=999?curValue:"999+"}}
+        {{props.curValue<=999?props.curValue:"999+"}}
       </el-text>
     </div>
     <el-text class="state">
-      {{message}}
+      {{props.message}}
     </el-text>
 
   </el-container>

@@ -26,7 +26,7 @@ const assembleArticleList = async () => {
 }
 
 onMounted(async () => {
-  if(userStorage.user) {
+  if(userStorage.isLogin()) {
     userArticleList.value = await assembleArticleList();
   }else {
     alert("Please login")

@@ -1,6 +1,6 @@
 <script setup lang="ts">
 import { useRouter,useRoute} from 'vue-router'
-import {ref, watchEffect} from "vue";
+import {onMounted, ref, watchEffect} from "vue";
 import ArticleInterface from "../../models/interfaces/ArticleInterface.ts"
 import ArticlePreview from "../../components/ArticlePreview.vue";
 import Article from "../../models/classes/Article.ts";
@@ -9,6 +9,7 @@ import {useCommonStore, useUserInfoStore} from "../../stores/counter.ts";
 import UserInfoPreview from "../../components/UserInfoPreview.vue";
 import MessageBox from "../../components/messagebox/MessageBox.vue";
 import FileUploadPanel from "../../components/FileUploadPanel.vue";
+import UserInterface from "../../models/interfaces/UserInterface.ts";
 
 const router = useRouter()
 const route = useRoute()
@@ -18,7 +19,7 @@ const commonStorage = useCommonStore()
 const user:User = User.getInstance()
 const article:Article = Article.getInstance()
 
-// const userModel = ref<UserInterface>()
+const userModel = ref<UserInterface>({})
 const allArticleList = ref<ArticleInterface[]>([]);
 const buttonClicked = ref(0);
 const uploadDialogVisible = ref(false)
@@ -48,6 +49,7 @@ const logout = async ()=>{
   await user.logout(()=>{
     window.location.reload()
   })
+  userStorage.logout()
 }
 
 //通过user和article对象来组装出视图需要的对象
@@ -70,18 +72,17 @@ const clickSort = async (sortStrategy:number) => {
 
 watchEffect( async () => {
   if (route.path === '/') {
+    if(userStorage.isLogin()){
+      //console.log(userStorage.isLogin())
+      userModel.value = await user.getUser()
+    }
     await clickSort(commonStorage.articleSortStrategy)
   }
 })
 
-// onMounted(async () => {
-//   if (route.path === '/') {
-//       if (localStorage.getItem('token')) {
-//           userModel.value = await user.getUser();
-//           userStorage.setUser(userModel.value)
-//       }
-//     }
-// });
+onMounted(async () => {
+  console.log(userStorage.isLogin())
+});
 
 </script>
 
@@ -90,7 +91,7 @@ watchEffect( async () => {
     <el-aside class="left-container" >
       <user-info-preview
           class="left-avatar"
-          v-model="userStorage.user"
+          v-model="userModel"
       />
       <el-menu class="left-menu"
                default-active="2"
@@ -110,33 +111,33 @@ watchEffect( async () => {
       <el-header class="header-box flex-row">
         <div class="buttons flex-row">
           <el-button class="guide-button"
-                     v-if="!userStorage.user"
+                     v-if="!userStorage.isLogin()"
                      type="primary"
                      @click="goToLogin">登录账号</el-button>
 
           <el-button class="guide-button"
-                     v-if="userStorage.user&&userStorage.user.roleLevel>=2"
+                     v-if="userStorage.isLogin()&&userModel.roleLevel>=2"
                      type="primary"
                      @click="goToPost">发布文章</el-button>
 
           <el-button class="guide-button"
-                     v-if="userStorage.user&&userStorage.user.roleLevel>=3"
+                     v-if="userStorage.isLogin()&&userModel.roleLevel>=3"
                      type="primary"
                      @click="goToTag">管理标签</el-button>
 
           <el-button class="guide-button"
-                     v-if="userStorage.user&&userStorage.user.roleLevel>=3"
+                     v-if="userStorage.isLogin()&&userModel.roleLevel>=3"
                      type="primary"
                      @click="showUploadPanel">上传文件</el-button>
 
           <el-button class="guide-button"
-                     v-if="userStorage.user"
+                     v-if="userStorage.isLogin()"
                      type="primary"
                      @click="logout">登出账号</el-button>
 
         </div>
         <div class="mailbox-container flex-row">
-          <MessageBox v-if="userStorage.user&&userStorage.user.roleLevel>=1"/>
+          <MessageBox v-if="userStorage.isLogin()&&userModel.roleLevel>=1"/>
         </div>
 
       </el-header>

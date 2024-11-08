@@ -14,6 +14,7 @@ import CollectionEntry from "../../../components/CollectionPreview.vue";
 import CollectionInterface from "../../../models/interfaces/CollectionInterface.ts";
 import User from "../../../models/classes/User.ts";
 import MessageTypeEnum from "../../../models/enums/MessageTypeEnum.ts";
+import UserInterface from "../../../models/interfaces/UserInterface.ts";
 
 const router = useRouter()
 const article = Article.getInstance()
@@ -23,6 +24,7 @@ const collection = Collection.getInstance()
 const userStorage = useUserInfoStore()
 const articleDataState = ref<number>(MessageTypeEnum.NO_OPERATION.value);
 
+const userModel = ref<UserInterface>({})
 const articleModel = ref<ArticleInterface>({
   articleUserId: "",
   collectionArticleNote: "",
@@ -56,9 +58,9 @@ let articleId:any = null
 const assembleCommentModelList = async () => {
   let commentsList = await comments.getArticleCommentList(articleId)
   for(let commentModel of commentsList){
-    const userModel = await user.getUserById(commentModel.commentUserId)
-    commentModel.username = userModel.username
-    commentModel.userAvatarURL = userModel.userAvatarURL
+    const commentUserModel = await user.getUserById(commentModel.commentUserId)
+    commentModel.username = commentUserModel.username
+    commentModel.userAvatarURL = commentUserModel.userAvatarURL
   }
   return commentsList
 }
@@ -83,7 +85,7 @@ const clickPostComment = async () => {
 }
 
 const clickUpvote = () => {
-  if(!userStorage||userStorage.isVisitor()){
+  if(!userStorage||!userStorage.isLogin()){
     alert("请先登录")
     return
   }
@@ -100,21 +102,21 @@ const clickUpvote = () => {
 
 
 const clickCollection = async () => {
-  if(!userStorage||userStorage.isVisitor()){
+  if(!userStorage||!userStorage.isLogin()){
     alert("请先登录")
     return
   }
   collectionDialogVisible.value=true;
-  if (userStorage.user) {
+  if (userStorage.isLogin()) {
     allCollectionList.value = await collection.getCollectionList()
   }
 }
 
 const clickAddToCollection = async (collectionName:string) => {
   let addArticleFlag = false
-  if (userStorage.user) {
+  if (userStorage.isLogin()) {
     addArticleFlag = await collection.addArticleIntoCollection({
-      username: userStorage.user.username,
+      username: userModel.value.username,
       articleId:articleId,
       collectionName:collectionName
     })
@@ -141,7 +143,7 @@ const clickAddToCollection = async (collectionName:string) => {
 }
 const updateArticle = () => {
   //如果用户登录，就更新需要验证才能修改的数据
-  if (userStorage.user) {
+  if (userStorage.isLogin()) {
     article.updateArticleAuthorizedData(articleId,articleDataState.value)
   }
   article.updateArticleCommonData(articleId)
@@ -162,8 +164,9 @@ const assembleArticleModel = async (articleId:string) => {
 onMounted(async ()=> {
   articleId = router.currentRoute.value.params.articleId
   articleModel.value = await assembleArticleModel(articleId);
-  if(userStorage.user) {
+  if(userStorage.isLogin()) {
     articleDataState.value = await article.getArticleDataState(articleId);
+    userModel.value = await user.getUser()
     //console.log(articleDataState.value)
   }
 })
@@ -217,8 +220,8 @@ onBeforeRouteLeave((to)=>{
 
       <div>
         <el-button class="update_button"
-                   v-if="userStorage.user&&userStorage.user.roleLevel>=2&&
-                    userStorage.user.username === articleModel.username"
+                   v-if="userStorage.isLogin()&&userModel.roleLevel>=2&&
+                    userModel.username === articleModel.username"
                    type="primary"
                    @click="clickUpdate">修改</el-button>
         <el-button class="update_button"
@@ -243,10 +246,11 @@ onBeforeRouteLeave((to)=>{
             v-for="comments in allCommentsList.values()"
             :key="comments.commentId"
             :comments="comments"
+            :userModel="userModel"
         />
       </template>
     </el-scrollbar>
-    <div v-if="!userStorage.user||userStorage.user.roleLevel<1" >
+    <div v-if="!userStorage.isLogin()||userModel.roleLevel<1" >
       <el-input  placeholder="登录后评论"></el-input>
     </div>
     <div v-else>

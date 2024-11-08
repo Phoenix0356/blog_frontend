@@ -5,7 +5,7 @@ import {ref} from "vue";
 import CommentInterface from "../models/interfaces/CommentInterface.ts";
 import {useUserInfoStore} from "../stores/counter.ts";
 
-const props = defineProps(['comments'])
+const props = defineProps(['comments','userModel'])
 const commentsModel = ref<CommentInterface>(JSON.parse(JSON.stringify(props.comments)))
 const comments = Comments.getInstance()
 const dialogVisible = ref(false)
@@ -27,7 +27,6 @@ const clickConfirmUpdate = async () => {
     await commentRef.value.validate()
     await comments.updateComment(commentsModel.value.commentId, tempComment.value.commentContent)
     commentsModel.value = await comments.getComment(commentsModel.value.commentId)
-
     dialogVisible.value = false
   }catch (error){
     console.log(error)
@@ -45,7 +44,7 @@ const clickConfirmUpdate = async () => {
   </div>
   <div class="comment-static">
     <el-text class="comment-reviseTime">最后修改：{{commentsModel.commentReviseTime}}</el-text>
-    <el-button class="comment-update-btn" v-if="userStorage.user&&userStorage.user.username === commentsModel.username" :icon="Edit" circle @click="dialogVisible = true"/>
+    <el-button class="comment-update-btn" v-if="userStorage.isLogin()&&props.userModel.username === commentsModel.username" :icon="Edit" circle @click="dialogVisible = true"/>
   </div>
 
 </div>

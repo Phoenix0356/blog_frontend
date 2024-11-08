@@ -20,7 +20,7 @@ const rules = {
 const dialogVisible = ref(false)
 const userStorage = useUserInfoStore()
 const user = User.getInstance()
-let userModel = null
+const userModel = ref<UserInterface>({})
 const tempUserModel = ref<UserInterface>({
   password: "",
   roleLevel: 0,
@@ -29,31 +29,30 @@ const tempUserModel = ref<UserInterface>({
 })
 const updateUserInfo = async () => {
     await userRef.value.validate();
-    if (userStorage.user&&tempUserModel.value.username !== userStorage.user.username) {
-      userModel = await user.updateUser(tempUserModel.value.username)
-      if (userModel) {
-        userStorage.setUser(userModel)
+    if (userStorage.isLogin()&&tempUserModel.value.username !== userModel.value.username) {
+      userModel.value = await user.updateUser(tempUserModel.value.username)
+      if (userModel.value) {
         dialogVisible.value = false
       }
     }else {
       alert("新用户名与之前相同")
     }
-
 }
 
 
-onMounted(() => {
-  if (userStorage.user){
-    tempUserModel.value = JSON.parse(JSON.stringify(userStorage.user))
+onMounted(async () => {
+  if (userStorage.isLogin()){
+    userModel.value = await user.getUser()
+    tempUserModel.value = JSON.parse(JSON.stringify(userModel.value))
   }else {
     alert("Please login")
-    router.push('/')
+    await router.push('/')
   }
 })
 
 const handleClose = () => {
-  if (userStorage.user) {
-    tempUserModel.value.username = userStorage.user.username
+  if (userStorage.isLogin()) {
+    tempUserModel.value.username = userModel.value.username
   }
   dialogVisible.value = false;
 }
@@ -62,9 +61,9 @@ const handleClose = () => {
 
 <template>
 <el-container class="root" direction="vertical">
-  <el-avatar class="avatar" size="large" :src="tempUserModel.userAvatarURL"/>
-  <el-text  class="username" size="large">用户名：{{ tempUserModel.username }}</el-text>
-  <el-text  class="userRole" size="large">身份：{{ getUserRole(tempUserModel.roleLevel) }}</el-text>
+  <el-avatar class="avatar" size="large" :src="userModel.userAvatarURL"/>
+  <el-text  class="username" size="large">用户名：{{ userModel.username }}</el-text>
+  <el-text  class="userRole" size="large">身份：{{ getUserRole(userModel.roleLevel) }}</el-text>
   <el-button class="update_button" size="large" type="primary" plain @click="dialogVisible = true">修改</el-button>
 </el-container>
   <el-dialog

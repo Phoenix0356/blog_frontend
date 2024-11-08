@@ -38,8 +38,9 @@ const login = async () => {
     let cryptPassword = await hashPassword(userModel.value.password)
     const loginUser:UserInterface = await user.login(userModel.value.username,cryptPassword,
         ()=>{router.push('/')})
+
     if(loginUser.username){
-      userStorage.setUser( await user.getUser())
+      userStorage.login()
     }
 }
 </script>

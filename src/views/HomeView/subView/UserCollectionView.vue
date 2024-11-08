@@ -7,7 +7,10 @@
   import CollectionEntry from "../../../components/CollectionPreview.vue";
   import { ArrowRight } from '@element-plus/icons-vue'
   import {useRouter} from "vue-router";
+  import userInterface from "../../../models/interfaces/UserInterface.ts";
+  import User from "../../../models/classes/User.ts";
 
+  const userModel = ref<userInterface>({});
   const createCollectionModel = ref<collectionInterface>({
     collectionDescription: "",
     collectionId: "",
@@ -21,6 +24,7 @@
   const collection = Collection.getInstance()
   const createCollectionDialogVisible = ref(false)
   const router = useRouter()
+  const user = User.getInstance()
 
   const collectionClicked = ref<CollectionInterface>()
   const articleBreadcrumbVisible = ref(false)
@@ -33,9 +37,9 @@
 
   const clickConformCreate = async () => {
     let flag = false
-    if (userStorage.user) {
+    if (userStorage.isLogin()) {
      flag = await collection.createCollection({
-        collectionUsername: userStorage.user.username,
+        collectionUsername: userModel.value.username,
         collectionName: createCollectionModel.value.collectionName,
         collectionDescription:createCollectionModel.value.collectionDescription
       })
@@ -48,8 +52,9 @@
   }
 
   onMounted(async () => {
-    if (userStorage.user) {
+    if (userStorage.isLogin()) {
       collectionList.value = await collection.getCollectionList()
+      userModel.value = user.getUser()
       collectionMapStorage.setCollectionMap(collectionList.value)
     }else {
       alert("Please login")

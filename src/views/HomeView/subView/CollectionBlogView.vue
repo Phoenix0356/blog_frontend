@@ -95,7 +95,7 @@ const clickConformNote = async ()=>{
 }
 
 onMounted(async () => {
-  if (userStorage.user) {
+  if (userStorage.isLogin()) {
     if (typeof curCollectionId === "string") {
       collectionArticleList.value = await collection.getAllArticleList(curCollectionId)
       collectionModel = collectionMapStorage.collectionMap[curCollectionId]

@@ -1,21 +1,30 @@
 import { defineStore } from 'pinia'
-import UserInterface from "../models/interfaces/UserInterface.ts";
 import {ref} from "vue";
 import CollectionInterface from "../models/interfaces/CollectionInterface.ts";
+import UserInterface from "../models/interfaces/UserInterface.ts";
 
 export const useUserInfoStore = defineStore('userInfo', () => {
     const user = ref<UserInterface>()
+    const loginState = ref();
 
-    function setUser(newUser: UserInterface) {
-        user.value = newUser
+    // function setUser(newUser: UserInterface) {
+    //     user.value = newUser
+    // }
+    //
+    // function isVisitor():boolean{
+    //     if(!user.value) return true
+    //     return user.value.roleLevel<1
+    // }
+    function login():void{
+        loginState.value = true
     }
-
-    function isVisitor():boolean{
-        if(!user.value) return true
-        return user.value.roleLevel<1
+    function logout():void{
+        loginState.value = false
     }
-
-    return { user, setUser, isVisitor}
+    function isLogin():boolean{
+        return loginState.value
+    }
+    return {user,loginState,login,logout,isLogin}
 },{
     persist: true
 })

@@ -42,9 +42,9 @@ const register = async () => {
   try {
     await userRef.value.validate();
     let cryptPassword = await hashPassword(userModel.password)
-    const regUser:UserInterface = await user.register(userModel.username,cryptPassword,
+    await user.register(userModel.username,cryptPassword,
         avatarBase64,()=>router.push("/"))
-    userStorage.setUser( await user.getUser())
+    userStorage.login()
   } catch (error) {
     console.log(error);
     return;
